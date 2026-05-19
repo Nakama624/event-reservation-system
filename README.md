@@ -18,14 +18,15 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 | 一般ユーザー | 予約一覧表示/検索(自身の予約のみ)、予約キャンセル、予約詳細表示 、お問合せ一覧表示、お問合せ詳細表示、お問合せ新規作成/送信、お問合せ削除（未対応時のみ） |    ◯     |                                                        |
 | 全ユーザー   | イベント一覧表示、イベントカレンダー表示、イベント詳細                                                                                                    |          |                                                        |
 
-## Dockerビルド
+## 環境構築
+### Dockerビルド
 
-- `git clone git@github.com:Nakama624/reservation-management-system.git`
-- `cd reservation-management-system`
+- `git clone git@github.com:Nakama624/event-reservation-system.git`
+- `cd event-reservation-system`
 - `./vendor/bin/sail up -d`
 
-## バックエンド環境構築
-
+### バックエンド(laravel-next-app)
+- `cd laravel-next-app`
 - `docker-compose exec php bash`
 - `composer install`
 - `cp .env.example .env`、環境変数を変更
@@ -34,16 +35,13 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 - `sail artisan db:seed`
 - `sail artisan storage:link`
 
-## フロントエンド環境構築
-
+### フロントエンド(next-frontend-app)
+- `cd next-frontend-app`
 - `./vendor/bin/sail npm install`
-- `cd frontend`
 - `npm install`
 - `npm run dev`
 
-## mailhog
-
-### 環境設定
+### mailhog
 
 http://localhost:8025/
 
@@ -54,9 +52,9 @@ http://localhost:8025/
 > +　MAIL_FROM_ADDRESS=no-reply@example.com
 > ```
 
-## stripe決済
-
-### 環境設定
+### stripe決済
+公式テスト詳細
+- https://docs.stripe.com/testing
 
 > stripe決済のアカウントを作成し、`.env` ファイルに以下のように追加。
 > https://dashboard.stripe.com/login?locale=ja-JP
@@ -66,7 +64,7 @@ http://localhost:8025/
 > +　APP_URL=http://localhost
 > ```
 
-### 実行テスト１/クレジットカード（VISA/成功）
+#### 実行テスト１/クレジットカード（VISA/成功）
 
 - メールアドレス：任意のアドレス
 - カード番号(VISA)：4242424242424242
@@ -74,14 +72,11 @@ http://localhost:8025/
 - セキュリティコード：（任意の 3 桁の数字）
 - 名前：任意の名前
 
-### 実行テスト２/コンビニ支払い（振込結果は非同期）
+#### 実行テスト２/コンビニ支払い（振込結果は非同期）
 
 - メールアドレス：任意のアドレス
 - 名前：任意の名前
 
-### テスト詳細
-
-- https://docs.stripe.com/testing
 
 ## 単体テスト
 
