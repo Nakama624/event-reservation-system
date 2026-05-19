@@ -19,16 +19,24 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 | 全ユーザー   | イベント一覧表示、イベントカレンダー表示、イベント詳細                                                                                                    |          |                                                        |
 
 ## 環境構築
+
 ### Dockerビルド
 
 - `git clone git@github.com:Nakama624/event-reservation-system.git`
-- `cd event-reservation-system`
+- `cd event-reservation-system/laravel-next-app`
+- `docker run --rm \
+  -u "$(id -u):$(id -g)" \
+  -v "$(pwd):/var/www/html" \
+  -w /var/www/html \
+  -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+  laravelsail/php82-composer:latest \
+  composer install`
+
 - `./vendor/bin/sail up -d`
 
 ### バックエンド(laravel-next-app)
-- `cd laravel-next-app`
-- `docker-compose exec php bash`
-- `composer install`
+
+- `./vendor/bin/sail composer install`
 - `cp .env.example .env`、環境変数を変更
 - `sail artisan key:generate`
 - `sail artisan migrate`
@@ -36,9 +44,10 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 - `sail artisan storage:link`
 
 ### フロントエンド(next-frontend-app)
-- `cd next-frontend-app`
-- `./vendor/bin/sail npm install`
+
+- `cd ../next-frontend-app/`
 - `npm install`
+- `cp .env.example .env.local`、環境変数を変更
 - `npm run dev`
 
 ### mailhog
@@ -53,7 +62,9 @@ http://localhost:8025/
 > ```
 
 ### stripe決済
+
 公式テスト詳細
+
 - https://docs.stripe.com/testing
 
 > stripe決済のアカウントを作成し、`.env` ファイルに以下のように追加。
@@ -76,7 +87,6 @@ http://localhost:8025/
 
 - メールアドレス：任意のアドレス
 - 名前：任意の名前
-
 
 ## 単体テスト
 
@@ -116,7 +126,7 @@ http://localhost:8025/
 ### バックエンド
 
 - PHP：PHP 8.4.13
-- Laravel：Laravel Framework 10.50.2
+- Laravel：Laravel Framework 13.9.0
 - Laravel Sanctum：ｖ3.3.3
 
 ### データベース

@@ -1,2 +1,6 @@
 *
 !.gitignore
+!contacts/
+!contacts/**
+!event-images/
+!event-images/**
