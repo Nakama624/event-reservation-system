@@ -91,7 +91,7 @@ class AuthController extends Controller
         $request->user()->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => '認証メールを再送しました',
+            'message' => '認証メールを送信しました',
         ]);
     }
 }
