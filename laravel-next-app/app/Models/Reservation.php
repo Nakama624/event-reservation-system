@@ -23,6 +23,11 @@ class Reservation extends Model
         'is_canceled',
     ];
 
+    
+    protected $casts = [
+        'is_canceled' => 'boolean',
+    ];
+
     public function user(): BelongsTo{
         return $this->belongsTo(User::class);
     }

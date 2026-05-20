@@ -14,43 +14,37 @@ class AdminController extends Controller
         $keyword = $request->input('keyword');
         $date = $request->input('date');
 
-        $allEvents = Schedule::query()
+        $events = Schedule::query()
             ->with(['event', 'reservations'])
-            // ->where('start_at', '>', now())
-
             ->whereHas('event', function ($query) use ($keyword) {
                 if (! empty($keyword)) {
-                    $query->where('title', 'like', '%'.$keyword.'%')
-                        ->orWhere('instructor_name', 'like', '%'.$keyword.'%');
+                    $query->where('title', 'like', '%' . $keyword . '%')
+                        ->orWhere('instructor_name', 'like', '%' . $keyword . '%');
                 }
             })
-
-        // 開催日で検索
             ->when(! empty($date), function ($query) use ($date) {
                 $query->whereDate('start_at', $date);
             })
             ->orderBy('start_at', 'desc')
-            ->get()
-            ->map(function ($schedule) {
-                return [
-                    'id' => $schedule->id,
-                    'event_id' => $schedule->event_id,
-                    'title' => $schedule->event->title,
-                    'instructor_name' => $schedule->event->instructor_name,
-                    'start_at' => $schedule->start_at->format('Y-m-d H:i'),
-                    'end_at' => $schedule->end_at?->format('Y-m-d H:i'),
-                    'lesson_img1' => $schedule->event->lesson_img1,
-                    'capacity' => $schedule->capacity,
-                    'total_participants' => $schedule->reservations->sum('participants'),
-                    'is_past_event' => $schedule->start_at < now(),
-                ];
-            });
+            ->paginate(20);
 
-        return response()->json([
-            'events' => $allEvents,
-        ]);
+        $events->getCollection()->transform(function ($schedule) {
+            return [
+                'id' => $schedule->id,
+                'event_id' => $schedule->event_id,
+                'title' => $schedule->event->title,
+                'instructor_name' => $schedule->event->instructor_name,
+                'start_at' => $schedule->start_at->format('Y-m-d H:i'),
+                'end_at' => $schedule->end_at?->format('Y-m-d H:i'),
+                'lesson_img1' => $schedule->event->lesson_img1,
+                'capacity' => $schedule->capacity,
+                'total_participants' => $schedule->reservations->sum('participants'),
+                'is_past_event' => $schedule->start_at < now(),
+            ];
+        });
+
+        return response()->json($events);
     }
-
     public function adminEventDetail($schedule_id)
     {
         $schedule = Schedule::with([
@@ -95,7 +89,7 @@ class AdminController extends Controller
                 'total_participants' => $totalParticipants,
                 'remaining_capacity' => $remainingCapacity,
                 'is_bookable' => $isBookable,
-                'is_past_event' => $isPastEvent,
+                'isPastEvent' => $isPastEvent,
             ],
             'reservations' => $reservations,
         ]);

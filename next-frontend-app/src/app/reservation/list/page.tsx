@@ -3,6 +3,7 @@ import EventSearchForm from "@/components/EventSearchForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { formatDateTime } from "@/utils/formatDateTime";
 
 interface Reservation {
   id: number;
@@ -78,8 +79,8 @@ export default async function Page({ searchParams }: Props) {
   const reservations = await getReservations(keyword, date);
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 sm:px-8">
-      <section className="mt-10">
+    <div className="w-full">
+      <section className="flex justify-start">
         <EventSearchForm
           keyword={keyword}
           date={date}
@@ -87,7 +88,7 @@ export default async function Page({ searchParams }: Props) {
         />
       </section>
 
-      <div className="mx-auto w-full max-w-5xl px-6 sm:px-8 pb-20">
+      <div className="pb-20">
         <h1 className="mt-10 mb-4 text-2xl font-bold text-gray-500">
           予約一覧
         </h1>
@@ -114,9 +115,13 @@ export default async function Page({ searchParams }: Props) {
                 return (
                   <tr
                     key={reservation.id}
-                    className="text-center h-16 border border-gray-300"
+                    className={`text-center h-16 border border-gray-300 ${
+                      isPast ? "bg-gray-100 text-gray-400" : ""
+                    }`}
                   >
-                    <td className="px-4">{reservation.schedule.start_at}</td>
+                    <td className="px-4">
+                      {formatDateTime(reservation.schedule.start_at)}
+                    </td>
                     <td className="px-4">{reservation.schedule.event.title}</td>
                     <td className="px-4">
                       {reservation.schedule.event.instructor_name}

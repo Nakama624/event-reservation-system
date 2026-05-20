@@ -6,66 +6,66 @@ import { cookies } from "next/headers";
 import { PaymentMethod, ReservationErrors, Schedule } from "./types";
 
 export interface EventReserveResponse {
-    schedule: Schedule;
-    paymentMethods: PaymentMethod[];
-    remainingCapacity: number;
-    errors?: ReservationErrors;
+  schedule: Schedule;
+  paymentMethods: PaymentMethod[];
+  remainingCapacity: number;
+  errors?: ReservationErrors;
 }
 
 interface Props {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }
 
 async function getEventReserve(id: string): Promise<EventReserveResponse> {
-    const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
-    if (!session?.accessToken) {
-        redirect("/login");
-    }
+  if (!session?.accessToken) {
+    redirect("/login");
+  }
 
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
-    const errorCookie = cookieStore.get("reservation_errors")?.value;
+  const errorCookie = cookieStore.get("reservation_errors")?.value;
 
-    const errors = errorCookie ? JSON.parse(errorCookie) : undefined;
+  const errors = errorCookie ? JSON.parse(errorCookie) : undefined;
 
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/${id}/reservation`;
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/${id}/reservation`;
 
-    const res = await fetch(url, {
-        headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${session.accessToken}`,
-        },
-    });
+  const res = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
 
-    if (res.status === 401) {
-        redirect("/login");
-    }
+  if (res.status === 401) {
+    redirect("/login");
+  }
 
-    if (!res.ok) {
-        throw new Error("予約入力欄が取得できませんでした");
-    }
+  if (!res.ok) {
+    throw new Error("予約入力欄が取得できませんでした");
+  }
 
-    const data = await res.json();
+  const data = await res.json();
 
-    return {
-        ...data,
-        errors,
-    };
+  return {
+    ...data,
+    errors,
+  };
 }
 
 export default async function EventReservePage({ params }: Props) {
-    const { id } = await params;
+  const { id } = await params;
 
-    const { schedule, paymentMethods, remainingCapacity, errors } =
-        await getEventReserve(id);
+  const { schedule, paymentMethods, remainingCapacity, errors } =
+    await getEventReserve(id);
 
-    return (
-        <EventReserveForm
-            schedule={schedule}
-            paymentMethods={paymentMethods}
-            remainingCapacity={remainingCapacity}
-            errors={errors}
-        />
-    );
+  return (
+    <EventReserveForm
+      schedule={schedule}
+      paymentMethods={paymentMethods}
+      remainingCapacity={remainingCapacity}
+      errors={errors}
+    />
+  );
 }
