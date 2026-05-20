@@ -23,7 +23,9 @@ export default function RootLayout({
         <Providers>
           <Header />
           <Menu />
-          <main>{children}</main>
+          <main className="w-full max-w-screen-2xl mx-auto px-8 sm:px-10 flex-1 mt-10">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

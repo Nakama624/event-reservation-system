@@ -85,7 +85,7 @@ export default function Header() {
                             py-2
                             font-medium
                             rounded-md
-                            hover:bg-gray-600
+                            hover:bg-gray-300
                             transition
                             border
                             border-gray-600

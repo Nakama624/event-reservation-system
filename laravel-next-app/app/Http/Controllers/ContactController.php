@@ -44,7 +44,8 @@ class ContactController extends Controller
 
     public function contactDetail($contact_id): JsonResponse
     {
-        $contact = Contact::findOrFail($contact_id);
+        $contact = Contact::with('contactStatus')
+            ->findOrFail($contact_id);
 
         return response()->json($contact);
     }
@@ -72,6 +73,7 @@ class ContactController extends Controller
             'title' => $request->title,
             'detail' => $request->detail,
             'img' => $request->img,
+            'status_id' => 1,
         ]);
 
         return response()->json([

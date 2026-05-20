@@ -16,38 +16,55 @@ class EventController extends Controller
         $keyword = $request->input('keyword');
         $date = $request->input('date');
 
-        $currentEvents = Schedule::query()
+        $events = Schedule::query()
             ->with(['event', 'reservations'])
-            ->where('start_at', '>', now())
-
             ->whereHas('event', function ($query) use ($keyword) {
                 if (! empty($keyword)) {
                     $query->where('title', 'like', '%'.$keyword.'%')
                         ->orWhere('instructor_name', 'like', '%'.$keyword.'%');
                 }
             })
-
-        // 開催日で検索
             ->when(! empty($date), function ($query) use ($date) {
                 $query->whereDate('start_at', $date);
             })
+            ->orderBy('start_at', 'desc')
+            ->paginate(20);
 
-            ->get();
+        $events->getCollection()->transform(function ($schedule) {
+            $totalParticipants = $schedule->reservations->sum('participants');
+            $capacity = $schedule->event->capacity;
 
-        return response()->json($currentEvents);
+            return [
+                'id' => $schedule->id,
+                'event_id' => $schedule->event_id,
+                'title' => $schedule->event->title,
+                'instructor_name' => $schedule->event->instructor_name,
+                'start_at' => $schedule->start_at->format('Y-m-d H:i'),
+                'finish_at' => $schedule->finish_at?->format('Y-m-d H:i'),
+                'lesson_img1' => $schedule->event->lesson_img1,
+                'capacity' => $capacity,
+                'total_participants' => $totalParticipants,
+                'remaining_capacity' => $capacity - $totalParticipants,
+                'price' => $schedule->event->price,
+                'is_bookable' => $capacity > $totalParticipants,
+                'is_past_event' => $schedule->start_at < now(),
+            ];
+        });
+
+        return response()->json($events);
     }
 
-    public function pastEventIndex()
-    {
-        // 全ての開催が終了しているイベントの場合
-        $pastEvents = Event::with('schedules')
-            ->whereDoesntHave('schedules', function ($query) {
-                $query->where('start_at', '>', now());
-            })
-            ->get();
+    // public function pastEventIndex()
+    // {
+    //     // 全ての開催が終了しているイベントの場合
+    //     $pastEvents = Event::with('schedules')
+    //         ->whereDoesntHave('schedules', function ($query) {
+    //             $query->where('start_at', '>', now());
+    //         })
+    //         ->get();
 
-        return response()->json($pastEvents);
-    }
+    //     return response()->json($pastEvents);
+    // }
 
     // // 未来日付で開催予定があるイベント詳細
     public function eventDetail($schedule_id)
