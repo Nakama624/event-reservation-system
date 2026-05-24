@@ -212,7 +212,7 @@ npx playwright test
 
 ## 画面遷移図
 
-![alt text](image-1.png)
+![alt text](readme_images/image-1.png)
 
 ## 画面一覧・機能一覧
 
@@ -241,6 +241,7 @@ npx playwright test
 
 ![alt text](image.png)
 
+---
 ### 2. 新規会員登録画面
 
 | 項目             | 内容               |
@@ -254,6 +255,7 @@ npx playwright test
 
 ![alt text](image-1.png)
 
+---
 ### 3. メール認証画面
 
 | 項目             | 内容                        |
@@ -266,6 +268,7 @@ npx playwright test
 
 ![alt text](image-2.png)
 
+---
 ### 4. イベント一覧画面
 
 | 項目             | 内容                               |
@@ -280,6 +283,7 @@ npx playwright test
 
 ![alt text](image-3.png)
 
+---
 ### 5. 過去のイベント一覧画面
 
 | 項目             | 内容                               |
@@ -294,6 +298,7 @@ npx playwright test
 
 ![alt text](image-4.png)
 
+---
 ### 6. イベント詳細画面
 
 | 項目             | 内容                  |
@@ -308,6 +313,7 @@ npx playwright test
 
 ![alt text](image-5.png)
 
+---
 ### 7. イベントカレンダー画面
 
 | 項目             | 内容                     |
@@ -321,6 +327,7 @@ npx playwright test
 
 ![alt text](image-6.png)
 
+---
 ### 8. 予約入力画面
 
 | 項目             | 内容                      |
@@ -331,6 +338,7 @@ npx playwright test
 | 機能             | 人数入力                  |
 |                  | 決済方法選択              |
 
+---
 ### 9. 予約確認画面
 
 | 項目             | 内容                              |
@@ -341,6 +349,7 @@ npx playwright test
 | 機能             | 予約内容確認                      |
 |                  | 二重送信防止                      |
 
+---
 ### 10. Stripe決済画面
 
 | 項目             | 内容                 |
@@ -352,6 +361,7 @@ npx playwright test
 |                  | 決済実行             |
 |                  | 決済完了画面への遷移 |
 
+---
 ### 11. 予約完了画面
 
 | 項目             | 内容                                      |
@@ -361,6 +371,7 @@ npx playwright test
 | 想定利用ユーザー | 一般ユーザー                              |
 | 機能             | 予約完了メッセージ表示                    |
 
+---
 ### 12. 予約一覧画面（各個人）
 
 | 項目             | 内容                               |
@@ -373,6 +384,7 @@ npx playwright test
 |                  | キーワード検索(講師名、イベント名) |
 |                  | 開催日付検索                       |
 
+---
 ### 13. 予約詳細画面
 
 | 項目             | 内容                |
@@ -382,6 +394,7 @@ npx playwright test
 | 想定利用ユーザー | 一般ユーザー        |
 | 機能             | 予約情報確認        |
 
+---
 ### 14. お問合せ一覧画面
 
 | 項目             | 内容               |
@@ -392,6 +405,7 @@ npx playwright test
 | 機能             | お問合せ一覧表示   |
 |                  | お問合せ削除(論理) |
 
+---
 ### 15. お問合せ新規画面
 
 | 項目             | 内容               |
@@ -402,6 +416,7 @@ npx playwright test
 | 機能             | お問合せ入力       |
 |                  | 入力バリデーション |
 
+---
 ### 16. お問合せ確認画面
 
 | 項目             | 内容               |
@@ -412,6 +427,7 @@ npx playwright test
 | 機能             | お問合せ内容確認   |
 |                  | お問合せ送信       |
 
+---
 ### 17. お問合せ完了画面
 
 | 項目             | 内容                       |
@@ -421,6 +437,7 @@ npx playwright test
 | 想定利用ユーザー | 一般ユーザー               |
 | 機能             | お問合せ完了メッセージ表示 |
 
+---
 ### 18. お問合せ詳細画面
 
 | 項目             | 内容             |
@@ -443,6 +460,7 @@ npx playwright test
 |                  | 予約状況確認        |
 |                  | 参加人数確認        |
 
+---
 ### 20. 予約詳細管理画面
 
 | 項目             | 内容                |
@@ -455,6 +473,7 @@ npx playwright test
 |                  | 参加人数確認        |
 |                  | 決済ステータス変更  |
 
+---
 ### 21. お問合せ一覧画面
 
 | 項目             | 内容                  |
@@ -464,6 +483,7 @@ npx playwright test
 | 想定利用ユーザー | 管理者                |
 | 機能             | お問合せ一覧表示      |
 
+---
 ### 22. お問合せ詳細画面
 
 | 項目             | 内容                  |
@@ -475,7 +495,7 @@ npx playwright test
 
 ## ER図
 
-![alt text](image.png)
+![alt text](readme_images/image.png)
 
 ## テーブル仕様
 
@@ -493,6 +513,7 @@ npx playwright test
 | created_at        | timestamp    |             |            |          |             |
 | updated_at        | timestamp    |             |            |          |             |
 
+---
 ### events テーブル
 
 | カラム名           | 型           | primary key | unique key | not null | foreign key |
@@ -511,6 +532,7 @@ npx playwright test
 | created_at         | timestamp    |             |            |          |             |
 | updated_at         | timestamp    |             |            |          |             |
 
+---
 ### schedulesテーブル
 
 | カラム名   | 型        | primary key | unique key | not null | foreign key |
@@ -522,6 +544,7 @@ npx playwright test
 | created_at | timestamp |             |            |          |             |
 | updated_at | timestamp |             |            |          |             |
 
+---
 ### reservationsテーブル
 
 | カラム名           | 型           | primary key | unique key | not null | foreign key         |
@@ -540,6 +563,7 @@ npx playwright test
 | created_at         | timestamp    |             |            |          |                     |
 | updated_at         | timestamp    |             |            |          |                     |
 
+---
 ### contactsテーブル
 
 | カラム名   | 型           | primary key | unique key | not null | foreign key        |
@@ -552,6 +576,7 @@ npx playwright test
 | created_at | timestamp    |             |            |          |                    |
 | updated_at | timestamp    |             |            |          |                    |
 
+---
 ### payment_methodsテーブル
 
 | カラム名       | 型           | primary key | unique key | not null | foreign key |
@@ -561,6 +586,7 @@ npx playwright test
 | created_at     | timestamp    |             |            |          |             |
 | updated_at     | timestamp    |             |            |          |             |
 
+---
 ### contact_statusesテーブル
 
 | カラム名   | 型           | primary key | unique key | not null | foreign key |
@@ -570,6 +596,4 @@ npx playwright test
 | created_at | timestamp    |             |            |          |             |
 | updated_at | timestamp    |             |            |          |             |
 
-```
 
-```
