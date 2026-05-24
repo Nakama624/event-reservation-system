@@ -31,7 +31,7 @@ class ReservationSeeder extends Seeder
             'participants' => 3,
             'amount' => 3000,
             'payment_status' => '未払い',
-            'payment_method_id' => 3,
+            'payment_method_id' => 2,
             'paid_at' => now(),
             'is_canceled' => true,
         ]);
@@ -42,7 +42,7 @@ class ReservationSeeder extends Seeder
             'participants' => 3,
             'amount' => 3000,
             'payment_status' => '未払い',
-            'payment_method_id' => 3,
+            'payment_method_id' => 1,
             'paid_at' => now(),
             'is_canceled' => false,
         ]);
@@ -53,7 +53,7 @@ class ReservationSeeder extends Seeder
             'participants' => 3,
             'amount' => 3000,
             'payment_status' => '未払い',
-            'payment_method_id' => 3,
+            'payment_method_id' => 2,
             'payment_updated_by' => 1,
             'paid_at' => null,
             'is_canceled' => false,

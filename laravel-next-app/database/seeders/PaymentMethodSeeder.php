@@ -17,10 +17,6 @@ class PaymentMethodSeeder extends Seeder
         ]);
 
         PaymentMethod::create([
-            'payment_method' => '銀行振込み',
-        ]);
-
-        PaymentMethod::create([
             'payment_method' => '現地払い',  // 現金を想定
         ]);
 

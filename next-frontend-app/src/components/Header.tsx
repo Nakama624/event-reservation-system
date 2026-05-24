@@ -81,19 +81,35 @@ export default function Header() {
           <button
             onClick={handleLogout}
             className="
-                            px-4
-                            py-2
-                            font-medium
-                            rounded-md
-                            hover:bg-gray-300
-                            transition
-                            border
-                            border-gray-600
-                            "
+              px-4
+              py-2
+              font-medium
+              rounded-md
+              hover:bg-gray-300
+              transition
+              border
+              border-gray-600
+              "
           >
             ログアウト
           </button>
-        ) : null}
+        ) : (
+          <Link
+            href="/login"
+            className="
+              px-4
+              py-2
+              font-medium
+              rounded-md
+              hover:bg-gray-300
+              transition
+              border
+              border-gray-600
+              "
+          >
+            ログイン
+          </Link>
+        )}
 
         <div className="text-black text-right">
           <p className="text-2xl font-bold">TEL.0120-123-456</p>

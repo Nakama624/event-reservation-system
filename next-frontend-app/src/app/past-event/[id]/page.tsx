@@ -1,7 +1,5 @@
 import LinkButton from "@/components/LinkButton";
 import { formatDateTime } from "@/utils/formatDateTime";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface EventSchedule {
   id: number;
@@ -36,7 +34,6 @@ interface EventDetailResponse {
   remainingCapacity: number;
   isBookable: boolean;
   isPastEvent: boolean;
-  isReserved: boolean;
 }
 
 type Props = {
@@ -46,20 +43,26 @@ type Props = {
 };
 
 async function getEventDetail(id: string): Promise<EventDetailResponse> {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
+
+  // if (!session?.accessToken) {
+  //     redirect("/login");
+  // }
 
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/${id}`;
 
   const res = await fetch(url, {
     cache: "no-store",
-    headers: {
-      // 認証がある/ないの両方で閲覧が可能
-      Accept: "application/json",
-      ...(session?.accessToken && {
-        Authorization: `Bearer ${session.accessToken}`,
-      }),
-    },
+    // headers: {
+    //     Accept: "application/json",
+    //     Authorization: `Bearer ${session.accessToken}`,
+    // },
   });
+
+  // if (res.status === 401) {
+  //     redirect("/login");
+  // }
+
   if (!res.ok) {
     throw new Error("イベント詳細が取得できませんでした");
   }
@@ -70,7 +73,7 @@ async function getEventDetail(id: string): Promise<EventDetailResponse> {
 export default async function EventDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const { schedule, remainingCapacity, isBookable, isPastEvent, isReserved } =
+  const { schedule, remainingCapacity, isBookable, isPastEvent } =
     await getEventDetail(id);
 
   return (
@@ -153,24 +156,26 @@ export default async function EventDetailPage({ params }: Props) {
               </table>
             </div>
             {isPastEvent ? (
-              <p className="rounded-lg bg-gray-300 px-6 py-3 text-center font-bold text-gray-600">
-                開催終了
+              <p className="rounded-lg bg-gray-100 px-4 py-3 text-center font-bold text-gray-500">
+                このイベントは終了しました
               </p>
-            ) : isReserved ? (
-              <p className="rounded-lg bg-gray-300 px-6 py-3 text-center font-bold text-gray-600">
-                予約済みです
-              </p>
-            ) : !isBookable ? (
-              <p className="rounded-lg bg-gray-300 px-6 py-3 text-center font-bold text-gray-600">
-                満席
-              </p>
+            ) : isBookable ? (
+              <div className="rounded-xl bg-red-50 p-5">
+                <p className="mb-4 text-center font-bold text-red-600">
+                  残り{remainingCapacity}名
+                </p>
+
+                <LinkButton
+                  href={`/event/${schedule.id}/reservation`}
+                  className="block w-full rounded-lg bg-red-500 px-6 py-3 text-center font-bold text-white"
+                >
+                  予約する
+                </LinkButton>
+              </div>
             ) : (
-              <LinkButton
-                href={`/event/${schedule.id}/reservation`}
-                className="block w-full rounded-lg bg-red-500 px-6 py-3 text-center font-bold text-white"
-              >
-                予約する
-              </LinkButton>
+              <p className="rounded-lg bg-red-50 px-4 py-3 text-center font-bold text-red-600">
+                満席です
+              </p>
             )}
           </div>
         </div>

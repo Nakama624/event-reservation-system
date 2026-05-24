@@ -23,6 +23,15 @@ export default function Menu() {
         </Link>
 
         <Link
+          href="/past-event/list"
+          className={`hover:text-blue-500 ${
+            pathname === "/past-event/list" ? " font-bold" : ""
+          }`}
+        >
+          過去のイベント一覧
+        </Link>
+
+        <Link
           href="/calendar"
           className={`hover:text-blue-500 ${
             pathname === "/calendar" ? " font-bold" : ""
