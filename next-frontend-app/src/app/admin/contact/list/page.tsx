@@ -2,6 +2,7 @@ import LinkButton from "@/components/LinkButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { adminFetch } from "@/utils/adminFetch";
 
 interface Contact {
   id: number;
@@ -20,7 +21,7 @@ async function getContacts(): Promise<Contact[]> {
 
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/contact/list`;
 
-  const res = await fetch(url, {
+  const res = await adminFetch(url, {
     cache: "no-store",
     headers: {
       Accept: "application/json",
@@ -35,7 +36,7 @@ async function getContacts(): Promise<Contact[]> {
   }
 
   if (!res.ok) {
-    throw new Error("お問い合わせ一覧の取得に失敗しました");
+    throw new Error("お問合せ一覧の取得に失敗しました");
   }
 
   return res.json();
@@ -48,7 +49,7 @@ export default async function ContactListPage() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-left text-2xl font-bold text-gray-500">
-          お問い合わせ一覧
+          お問合せ一覧
         </h1>
       </div>
 

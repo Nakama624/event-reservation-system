@@ -29,14 +29,14 @@ export default function Header() {
   };
   return (
     <header
-      className="
-        w-full
-        h-20
-        bg-gray-100
-        flex
-        items-center
-        px-6
-    "
+      className={`
+      w-full
+      h-20
+      ${isManager ? "bg-red-100" : "bg-gray-100"}
+      flex
+      items-center
+      px-6
+    `}
     >
       {isManager ? (
         <Link href="/admin/event/list">

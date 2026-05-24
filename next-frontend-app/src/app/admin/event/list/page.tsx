@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { formatDateTime } from "@/utils/formatDateTime";
 import Link from "next/link";
+import { adminFetch } from "@/utils/adminFetch";
 
 interface EventItem {
   id: number;
@@ -52,12 +53,12 @@ async function getEvents(
   const session = await getServerSession(authOptions);
 
   if (!session?.accessToken) {
-    redirect("/login");
+    redirect(`/login?callbackUrl=/admin/event/list`);
   }
 
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/event/list?${params.toString()}`;
 
-  const res = await fetch(url, {
+  const res = await adminFetch(url, {
     cache: "no-store",
     headers: {
       Accept: "application/json",
@@ -65,8 +66,14 @@ async function getEvents(
     },
   });
 
+  // 未ログイン
   if (res.status === 401) {
-    redirect("/login");
+    redirect(`/login?callbackUrl=/admin/event/list`);
+  }
+
+  // 管理者ではない
+  if (res.status === 403) {
+    redirect("/event/list");
   }
 
   if (!res.ok) {
@@ -100,7 +107,7 @@ export default async function EventListPage({ searchParams }: Props) {
       <div className="pb-20">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="mt-10 mb-4 text-2xl font-bold text-gray-500">
-            すべての予約一覧
+            全ての予約一覧
           </h1>
 
           <div className="mt-8 flex justify-center gap-2">

@@ -2,60 +2,81 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 export default function Menu() {
-    const { data: session, status } = useSession();
-    const isManager = session?.user?.isManager === true;
+  const { data: session, status } = useSession();
+  const isManager = session?.user?.isManager === true;
 
-    return (
-        <div className="bg-gray-100 p-4 shadow">
-            <nav className="flex items-center gap-8 font-bold">
-                <Link href="/event/list" className="hover:text-blue-500">
-                    イベント一覧
-                </Link>
+  const pathname = usePathname();
 
-                <Link href="/calendar" className="hover:text-blue-500">
-                    イベントカレンダー
-                </Link>
+  return (
+    <div className={`p-4 shadow ${isManager ? "bg-red-100" : "bg-gray-100"}`}>
+      <nav className="flex items-center gap-8">
+        <Link
+          href="/event/list"
+          className={`hover:text-blue-500 ${
+            pathname === "/event/list" ? " font-bold" : ""
+          }`}
+        >
+          イベント一覧
+        </Link>
 
-                {status === "loading" ? (
-                    <p className="flex-1 text-center">Loading...</p>
-                ) : session ? (
-                    isManager ? (
-                        <>
-                            <Link
-                                href="/admin/event/list"
-                                className="hover:text-blue-500"
-                            >
-                                全ての予約
-                            </Link>
+        <Link
+          href="/calendar"
+          className={`hover:text-blue-500 ${
+            pathname === "/calendar" ? " font-bold" : ""
+          }`}
+        >
+          イベントカレンダー
+        </Link>
 
-                            <Link
-                                href="/admin/contact/list"
-                                className="hover:text-blue-500"
-                            >
-                                お問合せ一覧
-                            </Link>
-                        </>
-                    ) : (
-                        <>
-                            <Link
-                                href="/reservation/list"
-                                className="hover:text-blue-500"
-                            >
-                                予約一覧
-                            </Link>
+        {status === "loading" ? (
+          <p className="flex-1 text-center">Loading...</p>
+        ) : session ? (
+          isManager ? (
+            <>
+              <Link
+                href="/admin/event/list"
+                className={`hover:text-blue-500 ${
+                  pathname === "/admin/event/list" ? " font-bold" : ""
+                }`}
+              >
+                全ての予約
+              </Link>
 
-                            <Link
-                                href="/contact/list"
-                                className="hover:text-blue-500"
-                            >
-                                お問合せ
-                            </Link>
-                        </>
-                    )
-                ) : null}
-            </nav>{" "}
-        </div>
-    );
+              <Link
+                href="/admin/contact/list"
+                className={`hover:text-blue-500 ${
+                  pathname === "/admin/contact/list" ? " font-bold" : ""
+                }`}
+              >
+                全てのお問合せ
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/reservation/list"
+                className={`hover:text-blue-500 ${
+                  pathname === "/reservation/list" ? " font-bold" : ""
+                }`}
+              >
+                予約一覧
+              </Link>
+
+              <Link
+                href="/contact/list"
+                className={`hover:text-blue-500 ${
+                  pathname === "/contact/list" ? " font-bold" : ""
+                }`}
+              >
+                お問合せ一覧
+              </Link>
+            </>
+          )
+        ) : null}
+      </nav>
+    </div>
+  );
 }

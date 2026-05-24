@@ -33,17 +33,6 @@ Route::post('/email/verification-notification', [AuthController::class, 'resendV
 
 // 認証済みユーザーのみアクセス可能なルート
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-
-    // 管理者
-    // イベント一覧（すべて表示）
-    Route::get('/admin/event/list', [AdminController::class, 'adminEventList']);
-    Route::get('/admin/event/{schedule_id}', [AdminController::class, 'adminEventDetail']);
-    // 支払ステータスを支払済みへ
-    Route::post('/admin/event/{reservation_id}/paid', [AdminController::class, 'adminReservationPaid']);
-    // お問合せ
-    Route::get('/admin/contact/list', [AdminController::class, 'adminContactList']);
-    Route::get('/admin/contact/{contact_id}', [AdminController::class, 'adminContactDetail']);
-
     // 予約一覧へ
     Route::get('/reservation/list', [ReservationController::class, 'reservationList']);
     // 予約入力へ
@@ -66,8 +55,24 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/contact/{contact_id}', [ContactController::class, 'contactDetail']);
     // 確認
     Route::post('/contact/confirm', [ContactController::class, 'confirm']);
-    // お問い合わせ完了
+    // お問合せ完了
     Route::post('/contact/complete', [ContactController::class, 'complete']);
+    // 論理削除
+    Route::post('/contact/{contact_id}/delete', [ContactController::class, 'delete']);
+});
+
+Route::middleware(['auth:sanctum', 'verified', 'admin'])->group(function () {
+
+    // 管理者
+    Route::get('/admin/event/list', [AdminController::class, 'adminEventList']);
+
+    Route::get('/admin/event/{schedule_id}', [AdminController::class, 'adminEventDetail']);
+
+    Route::post('/admin/event/{reservation_id}/paid', [AdminController::class, 'adminReservationPaid']);
+
+    Route::get('/admin/contact/list', [AdminController::class, 'adminContactList']);
+
+    Route::get('/admin/contact/{contact_id}', [AdminController::class, 'adminContactDetail']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

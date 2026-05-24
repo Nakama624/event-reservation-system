@@ -43,7 +43,7 @@ async function getContactDetail(id: string): Promise<Contact> {
   }
 
   if (!res.ok) {
-    throw new Error("お問い合わせ詳細の取得に失敗しました");
+    throw new Error("お問合せ詳細の取得に失敗しました");
   }
 
   return res.json();
@@ -88,7 +88,7 @@ export default async function ContactDetailPage({ params }: Props) {
                 <img
                   src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${contact.img}`}
                   className="w-40"
-                  alt="お問い合わせ画像"
+                  alt="お問合せ画像"
                   width={160}
                   height={120}
                 />

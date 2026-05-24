@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function VerifyNoticePage() {
   const { data: session, status } = useSession();
@@ -25,6 +26,10 @@ export default function VerifyNoticePage() {
     );
 
     const data = await res.json();
+
+    if (res.status === 401) {
+      redirect("/login");
+    }
 
     if (!res.ok) {
       setMessage(data.message || "認証メールの送信に失敗しました");

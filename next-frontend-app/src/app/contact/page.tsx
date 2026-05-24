@@ -3,6 +3,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function ContactPage() {
   const router = useRouter();
@@ -46,9 +47,9 @@ export default function ContactPage() {
       },
     );
 
+    // ログインしていない場合はログイン画面へ
     if (res.status === 401) {
-      router.push("/login");
-      return;
+      redirect("/login");
     }
 
     if (res.status === 422) {
@@ -73,7 +74,7 @@ export default function ContactPage() {
 
   return (
     <div className="w-[700px] mx-auto mt-20">
-      <h1 className="mb-8 text-3xl font-bold text-center">お問い合わせ</h1>
+      <h1 className="mb-8 text-3xl font-bold text-center">お問合せ</h1>
 
       <form onSubmit={handleSubmit}>
         {/* 件名 */}

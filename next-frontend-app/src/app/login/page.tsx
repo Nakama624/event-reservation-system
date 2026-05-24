@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSession } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,10 +64,17 @@ export default function LoginPage() {
 
       const updatedSession = await getSession();
 
+      // ログイン後
+      // メール認証がまだならメール認証画面へ
+      // 管理者の場合は管理者画面へ
+      // 一般の場合は遷移前の画面があれば戻す（callbackUrl）
+      // 　　　　　　なければ個人の予約一覧画面へ
       if (!updatedSession?.user?.emailVerifiedAt) {
         router.push("/email/verify-notice");
       } else if (updatedSession.user.isManager) {
         router.push("/admin/event/list");
+      } else if (callbackUrl) {
+        router.push(callbackUrl);
       } else {
         router.push("/reservation/list");
       }

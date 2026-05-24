@@ -61,9 +61,12 @@ export default function EventReserveForm({
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <label className="font-bold">参加人数</label>
+              <label htmlFor="participants" className="font-bold">
+                参加人数
+              </label>
               <div className="col-span-2">
                 <input
+                  id="participants"
                   type="number"
                   name="participants"
                   min="1"

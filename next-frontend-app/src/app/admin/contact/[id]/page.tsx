@@ -2,6 +2,7 @@ import LinkButton from "@/components/LinkButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { adminFetch } from "@/utils/adminFetch";
 
 type Contact = {
   id: number;
@@ -27,7 +28,7 @@ async function getContactDetail(id: string): Promise<Contact> {
   }
 
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/contact/${id}`;
-  const res = await fetch(url, {
+  const res = await adminFetch(url, {
     cache: "no-store",
     headers: {
       Accept: "application/json",
@@ -40,7 +41,7 @@ async function getContactDetail(id: string): Promise<Contact> {
   }
 
   if (!res.ok) {
-    throw new Error("お問い合わせ詳細の取得に失敗しました");
+    throw new Error("お問合せ詳細の取得に失敗しました");
   }
 
   return res.json();
@@ -84,7 +85,7 @@ export default async function ContactDetailPage({ params }: Props) {
                 <img
                   src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${contact.img}`}
                   className="w-40"
-                  alt="お問い合わせ画像"
+                  alt="お問合せ画像"
                 />
               ) : (
                 <p>画像なし</p>

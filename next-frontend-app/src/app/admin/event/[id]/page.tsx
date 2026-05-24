@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import ReservationList from "./components/ReservationList";
 import { formatDateTime } from "@/utils/formatDateTime";
+import { adminFetch } from "@/utils/adminFetch";
 
 interface Schedule {
   id: number;
@@ -53,7 +54,7 @@ async function getEventDetail(id: string): Promise<EventDetailResponse> {
 
   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/event/${id}`;
 
-  const res = await fetch(url, {
+  const res = await adminFetch(url, {
     cache: "no-store",
     headers: {
       Accept: "application/json",

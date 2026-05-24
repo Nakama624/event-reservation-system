@@ -77,7 +77,17 @@ class ContactController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'お問い合わせを保存しました',
+            'message' => 'お問合せを保存しました',
         ]);
+    }
+    public function delete($contact_id){
+
+        $contact = Contact::findOrFail($contact_id);
+        $contact->delete();
+
+        return response()->json([
+            'message' => '削除しました'
+        ]);
+
     }
 }
