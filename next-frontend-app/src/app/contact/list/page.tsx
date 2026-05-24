@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { formatDateTime } from "@/utils/formatDateTime";
-
+import ContactDeleteButton from "./components/ContactDeleteButton";
 interface Contact {
   id: number;
   title: string;
@@ -35,7 +35,7 @@ async function getContacts(): Promise<Contact[]> {
   }
 
   if (!res.ok) {
-    throw new Error("お問い合わせ一覧の取得に失敗しました");
+    throw new Error("お問合せ一覧の取得に失敗しました");
   }
 
   return res.json();
@@ -48,7 +48,7 @@ export default async function ContactListPage() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-left text-2xl font-bold text-gray-500">
-          お問い合わせ一覧
+          お問合せ一覧
         </h1>
         <LinkButton href={`/contact`} className="bg-blue-500 text-white">
           新規作成
@@ -77,10 +77,9 @@ export default async function ContactListPage() {
                 <td className="px-4">{contact.title}</td>
                 <td className="px-4">{contact.status}</td>
                 <td>
+                  {/* ステータス：未対応の場合は削除（ソフト）が可能 */}
                   {contact.status === "未対応" && (
-                    <button className="bg-red-500 text-white px-4 py-2 rounded">
-                      削除
-                    </button>
+                    <ContactDeleteButton contactId={contact.id} />
                   )}
                 </td>
                 <td className="px-4">

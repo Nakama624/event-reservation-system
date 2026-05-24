@@ -19,8 +19,9 @@ interface Props {
 async function getEventReserve(id: string): Promise<EventReserveResponse> {
   const session = await getServerSession(authOptions);
 
+  // ログインされていない場合はログイン画面へ
   if (!session?.accessToken) {
-    redirect("/login");
+    redirect(`/login?callbackUrl=/event/${id}/reservation`);
   }
 
   const cookieStore = await cookies();
@@ -38,8 +39,9 @@ async function getEventReserve(id: string): Promise<EventReserveResponse> {
     },
   });
 
+  // Laravel側の認証(/API)がない場合はログイン画面へ
   if (res.status === 401) {
-    redirect("/login");
+    redirect(`/login?callbackUrl=/event/${id}/reservation`);
   }
 
   if (!res.ok) {

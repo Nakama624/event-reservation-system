@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 interface Contact {
   title: string;
@@ -51,8 +52,7 @@ export default function ContactConfirm() {
     );
 
     if (res.status === 401) {
-      router.push("/login");
-      return;
+      redirect("/login");
     }
 
     if (!res.ok) {
@@ -67,7 +67,7 @@ export default function ContactConfirm() {
   };
 
   if (!contact) {
-    return <div>お問い合わせ内容がありません</div>;
+    return <div>お問合せ内容がありません</div>;
   }
 
   return (
@@ -94,7 +94,7 @@ export default function ContactConfirm() {
                 <img
                   src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${contact.img}`}
                   className="w-40"
-                  alt="お問い合わせ画像"
+                  alt="お問合せ画像"
                 />
               ) : (
                 <p>画像なし</p>
