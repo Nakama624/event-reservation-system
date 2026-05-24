@@ -28,20 +28,6 @@ test.describe("イベント一覧", () => {
     await expect(reservationRow).toContainText("3");
   });
 
-  // ★ダイアロぐをつけてから再修正
-  //   test("予約をキャンセルできること", async ({ page }) => {
-  //     // キャンセルボタン押下
-  //     await page.getByRole("button", { name: "キャンセル" }).click();
-
-  //     // 確認ダイアログ対応
-  //     page.on("dialog", async (dialog) => {
-  //       await dialog.accept();
-  //     });
-
-  //     // キャンセル完了メッセージ確認
-  //     await expect(page.getByText("予約をキャンセルしました")).toBeVisible();
-  //   });
-
   test("キャンセル済み予約が表示されること", async ({ page }) => {
     // 予約キャンセル行を取得
     const reservationRow = page.locator("tr").filter({

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
+use App\Models\Reservation;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 
@@ -11,13 +11,30 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function eventList(Request $request)
+    {
+        return $this->getEventList($request, 'future');
+    }
+
+    public function pastEventIndex(Request $request)
+    {
+        return $this->getEventList($request, 'past');
+    }
+
+    private function getEventList(Request $request, string $type)
     {
         $keyword = $request->input('keyword');
         $date = $request->input('date');
 
         $events = Schedule::query()
             ->with(['event', 'reservations'])
+            ->when($type === 'future', function ($query) {
+                $query->where('start_at', '>=', now());
+            })
+            ->when($type === 'past', function ($query) {
+                $query->where('start_at', '<', now());
+            })
             ->whereHas('event', function ($query) use ($keyword) {
                 if (! empty($keyword)) {
                     $query->where('title', 'like', '%'.$keyword.'%')
@@ -27,7 +44,7 @@ class EventController extends Controller
             ->when(! empty($date), function ($query) use ($date) {
                 $query->whereDate('start_at', $date);
             })
-            ->orderBy('start_at', 'desc')
+            ->orderBy('start_at', $type === 'future' ? 'asc' : 'desc')
             ->paginate(20);
 
         $events->getCollection()->transform(function ($schedule) {
@@ -54,41 +71,34 @@ class EventController extends Controller
         return response()->json($events);
     }
 
-    // public function pastEventIndex()
-    // {
-    //     // 全ての開催が終了しているイベントの場合
-    //     $pastEvents = Event::with('schedules')
-    //         ->whereDoesntHave('schedules', function ($query) {
-    //             $query->where('start_at', '>', now());
-    //         })
-    //         ->get();
-
-    //     return response()->json($pastEvents);
-    // }
-
-    // // 未来日付で開催予定があるイベント詳細
-    public function eventDetail($schedule_id)
+    public function eventDetail(Request $request, $schedule_id)
     {
-        // 【開催日の表示】
-        // イベントの全工程を終了した場合は、すべての開催日を表示
-        // まだ終了していない場合は、各scheduleの開催日を表示
         $schedule = Schedule::with('event.schedules', 'reservations')
             ->findOrFail($schedule_id);
 
-        $totalParticipants = $schedule
-            ->reservations
-            ->sum('participants');
+        $totalParticipants = $schedule->reservations->sum('participants');
 
         $remainingCapacity = $schedule->event->capacity - $totalParticipants;
         $isBookable = $remainingCapacity > 0;
-
         $isPastEvent = $schedule->start_at < now();
+
+        $isReserved = false;
+
+        $user = $request->user('sanctum');
+
+        if ($user) {
+            $isReserved = Reservation::where('user_id', $user->id)
+                ->where('schedule_id', $schedule->id)
+                ->where('is_canceled', 0)
+                ->exists();
+        }
 
         return response()->json([
             'schedule' => $schedule,
             'remainingCapacity' => $remainingCapacity,
             'isBookable' => $isBookable,
             'isPastEvent' => $isPastEvent,
+            'isReserved' => $isReserved,
         ]);
     }
 }

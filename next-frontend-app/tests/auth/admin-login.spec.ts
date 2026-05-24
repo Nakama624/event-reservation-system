@@ -29,7 +29,7 @@ test.describe("ログイン機能", () => {
     await expect(page.getByRole("link", { name: "お問合せ" })).toBeVisible();
   });
 
-  // ログイン失敗のテストケース
+  // ログイン失敗
   test("間違った認証情報ではログインできないこと", async ({ page }) => {
     // 1. フォームに間違った情報を入力する
     await page.getByLabel("メールアドレス").fill("wrong@example.com");

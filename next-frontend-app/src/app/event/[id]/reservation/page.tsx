@@ -39,7 +39,6 @@ async function getEventReserve(id: string): Promise<EventReserveResponse> {
     },
   });
 
-  // Laravel側の認証(/API)がない場合はログイン画面へ
   if (res.status === 401) {
     redirect(`/login?callbackUrl=/event/${id}/reservation`);
   }

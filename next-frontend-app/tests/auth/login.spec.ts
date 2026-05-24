@@ -68,7 +68,7 @@ test.describe("ログイン機能", () => {
 });
 
 test.describe("認証ガード", () => {
-  test("未ログインで管理画面にアクセスするとログイン画面へ戻されること", async ({
+  test("未ログインで予約一覧画面にアクセスするとログイン画面へ戻されること", async ({
     page,
   }) => {
     await page.context().clearCookies();

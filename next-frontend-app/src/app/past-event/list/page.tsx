@@ -1,7 +1,6 @@
 import LinkButton from "@/components/LinkButton";
 import EventSearchForm from "@/components/EventSearchForm";
 import Link from "next/link";
-// import Image from "next/image";
 
 // import { getServerSession } from "next-auth";
 // import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -53,8 +52,8 @@ async function getEvents(
   if (date) params.set("date", date);
   if (page) params.set("page", page);
 
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/list?${params.toString()}`;
-
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/past-event/list?${params.toString()}`;
+  console.log(url);
   const res = await fetch(url, {
     cache: "no-store",
     headers: {
@@ -63,7 +62,9 @@ async function getEvents(
   });
 
   if (!res.ok) {
-    throw new Error("イベント一覧の取得に失敗しました");
+    const errorText = await res.text();
+    console.log("過去イベント一覧APIエラー:", res.status, errorText);
+    throw new Error("過去のイベント一覧の取得に失敗しました");
   }
 
   const data: PaginationResponse<EventItem> = await res.json();
@@ -83,13 +84,17 @@ export default async function EventListPage({ searchParams }: Props) {
   return (
     <div className="w-full">
       <section className="flex justify-between items-center">
-        <EventSearchForm keyword={keyword} date={date} action="/event/list" />
+        <EventSearchForm
+          keyword={keyword}
+          date={date}
+          action="/past-event/list"
+        />
       </section>
 
       <div className="pb-20">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="mt-10 mb-4 text-2xl font-bold text-gray-500">
-            イベント一覧
+            過去のイベント一覧
           </h1>
 
           <div className="mt-8 flex justify-center gap-2">
@@ -99,7 +104,7 @@ export default async function EventListPage({ searchParams }: Props) {
             ).map((pageNumber) => (
               <Link
                 key={pageNumber}
-                href={`/event/list?page=${pageNumber}`}
+                href={`/past-event/list?page=${pageNumber}`}
                 className={`rounded px-3 py-2 ${
                   pageNumber === currentEvents.current_page
                     ? "bg-blue-600 text-white"

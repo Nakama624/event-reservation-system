@@ -9,6 +9,7 @@ use Stripe\Stripe;
 
 class StripeController extends Controller
 {
+    // クレジットカードのみ
     public function checkout(Request $request, $schedule_id)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
