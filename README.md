@@ -83,35 +83,39 @@ http://localhost:8025/
 ## 単体テスト
 
 ### DBを作成
-
-- `docker-compose exec mysql bash`
+- `cd laravel-next-app`
+- `./vendor/bin/sail exec mysql bash`
 - `mysql -u root -p`、パスワード入力
 - `CREATE DATABASE demo_test;`
 - `exit`
 
 ### .env.testingを作成
-
-- `docker-compose exec php bash`
+- `./vendor/bin/sail exec mysql bash`
 - `cp .env .env.testing`、環境変数を変更
-- `php artisan key:generate --env=testing`
-- `php artisan migrate --env=testing`
+- `./vendor/bin/sail artisan key:generate --env=testing`
+- `./vendor/bin/sail artisan migrate --env=testing`
 
 ### Laravel/Unitテスト実行
+- `cd laravel-next-app`
 
-```bash
-cd laravel-next-app
-
-
-```
-
-- 1.ｘｘｘｘ：
-  `ｘｘｘｘ`
+- 1.予約機能：
+  `ail artisan test tests/Feature/ReservationTest.php`
 - 2.ｘｘｘｘ：
   `ｘｘｘｘ`
 - 3.ｘｘｘｘ：
   `ｘｘｘｘ`
 - 4.ｘｘｘｘ：
   `ｘｘｘｘｘ`
+
+  | ファイル名                    | テスト内容                                                                |
+  | ----------------------------- | ------------------------------------------------------------------------- |
+  | `Feature/ReservationTest.php` | ログインユーザーが予約できる 　　　                                       |
+  |                               | 同じユーザーが同じイベントを二重予約できない                              |
+  |                               | 残席数を超えて予約できない 　　　　　　　　　　　　　　　　　　　　　     |
+  |                               | 自分の予約をキャンセルできる 　　　　　                                   |
+  |                               | 自分の予約だけ取得できる 　　　　　　　　　　                             |
+  |                               | 他人の予約をキャンセルできない 　　　　　　　　　　　　　　　　　　　　　 |
+
 
 ### playwrightテスト実行
 
