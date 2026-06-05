@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     if (!session?.accessToken) {
         redirect("/login");
     }
-    
+
     const formData = await request.formData();
 
     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/contact/complete`;

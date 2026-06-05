@@ -3,13 +3,13 @@ import { test, expect } from "vitest";
 import EventSearchForm from "@/components/EventSearchForm";
 
 test("検索フォームが表示される", () => {
-  render(<EventSearchForm />);
+    render(<EventSearchForm />);
 
-  expect(
-    screen.getByPlaceholderText("イベント名または講師名を入力してください"),
-  ).toBeInTheDocument();
+    expect(
+        screen.getByPlaceholderText("イベント名または講師名を入力してください"),
+    ).toBeInTheDocument();
 
-  expect(screen.getByRole("button", { name: "検索" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "検索" })).toBeInTheDocument();
 
-  expect(screen.getByText("クリア")).toBeInTheDocument();
+    expect(screen.getByText("クリア")).toBeInTheDocument();
 });
