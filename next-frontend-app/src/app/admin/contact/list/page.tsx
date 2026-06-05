@@ -88,6 +88,9 @@ export default async function ContactListPage() {
           </tbody>
         </table>
       </div>
+      <p className="text-red-400 text-right">
+        ※対応後はシステム部にステータス更新を依頼してください
+      </p>
     </div>
   );
 }

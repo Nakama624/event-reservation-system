@@ -9,43 +9,44 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function adminEventList(Request $request)
+    public function adminReservationList(Request $request)
     {
         $keyword = $request->input('keyword');
         $date = $request->input('date');
 
-        $events = Schedule::query()
-            ->with(['event', 'reservations'])
-            ->whereHas('event', function ($query) use ($keyword) {
-                if (! empty($keyword)) {
-                    $query->where('title', 'like', '%' . $keyword . '%')
-                        ->orWhere('instructor_name', 'like', '%' . $keyword . '%');
-                }
+        $reservations = Reservation::query()
+            ->with(['user', 'schedule.event'])
+            ->when(!empty($keyword), function ($query) use ($keyword) {
+                $query->whereHas('schedule.event', function ($q) use ($keyword) {
+                    $q->where('title', 'like', "%{$keyword}%")
+                    ->orWhere('instructor_name', 'like', "%{$keyword}%");
+                });
             })
-            ->when(! empty($date), function ($query) use ($date) {
-                $query->whereDate('start_at', $date);
+            ->when(!empty($date), function ($query) use ($date) {
+                $query->whereHas('schedule', function ($q) use ($date) {
+                    $q->whereDate('start_at', $date);
+                });
             })
-            ->orderBy('start_at', 'desc')
+            ->latest()
             ->paginate(20);
 
-        $events->getCollection()->transform(function ($schedule) {
+        $reservations->getCollection()->transform(function ($reservation) {
             return [
-                'id' => $schedule->id,
-                'event_id' => $schedule->event_id,
-                'title' => $schedule->event->title,
-                'instructor_name' => $schedule->event->instructor_name,
-                'start_at' => $schedule->start_at->format('Y-m-d H:i'),
-                'end_at' => $schedule->end_at?->format('Y-m-d H:i'),
-                'lesson_img1' => $schedule->event->lesson_img1,
-                'capacity' => $schedule->capacity,
-                'total_participants' => $schedule->reservations->sum('participants'),
-                'is_past_event' => $schedule->start_at < now(),
+                'id' => $reservation->id,
+                'schedule_id' => $reservation->schedule_id,
+                'event_id' => $reservation->schedule?->event_id,
+
+                'user_name' => $reservation->user?->name,
+                'participants' => $reservation->participants,
+                'payment_status' => $reservation->payment_status,
+                'event_title' => $reservation->schedule?->event?->title,
+                'instructor_name' => $reservation->schedule?->event?->instructor_name,
+                'start_at' => $reservation->schedule?->start_at?->format('Y-m-d H:i'),
             ];
         });
-
-        return response()->json($events);
+        return response()->json($reservations);
     }
-    public function adminEventDetail($schedule_id)
+    public function adminReservationDetail($schedule_id)
     {
         $schedule = Schedule::with([
             'event',

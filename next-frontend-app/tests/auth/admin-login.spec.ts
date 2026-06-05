@@ -20,13 +20,20 @@ test.describe("ログイン機能", () => {
 
     //メニューの表示
     await expect(
-      page.getByRole("link", { name: "イベント一覧" }),
+      page.getByRole("link", { name: "イベント一覧", exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "イベントカレンダー" }),
+      page.getByRole("link", { name: "過去のイベント一覧", exact: true }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "全ての予約" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "お問合せ" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "イベントカレンダー", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "全ての予約", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "全てのお問合せ", exact: true }),
+    ).toBeVisible();
   });
 
   // ログイン失敗
@@ -54,8 +61,10 @@ test.describe("認証ガード", () => {
 
     await page.goto("http://localhost:3000/admin/event/list");
 
-    await page.waitForURL("**/login");
-    await expect(page).toHaveURL("http://localhost:3000/login");
+    await page.waitForURL("**/login?callbackUrl=/admin/event/list");
+    await expect(page).toHaveURL(
+      "http://localhost:3000/login?callbackUrl=/admin/event/list",
+    );
 
     await expect(page.getByRole("heading", { name: "ログイン" })).toBeVisible();
   });

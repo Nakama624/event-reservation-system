@@ -12,16 +12,19 @@ class ContactStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        ContactStatus::create([
-            'status' => '未対応',
-        ]);
+        ContactStatus::updateOrCreate(
+            ['id' => 1],
+            ['status' => '未対応']
+        );
 
-        ContactStatus::create([
-            'status' => '対応中',
-        ]);
+        ContactStatus::updateOrCreate(
+            ['id' => 2],
+            ['status' => '対応中']
+        );
 
-        ContactStatus::create([
-            'status' => '対応済み',  // 現金を想定
-        ]);
+        ContactStatus::updateOrCreate(
+            ['id' => 3],
+            ['status' => '対応済み']
+        );
     }
 }

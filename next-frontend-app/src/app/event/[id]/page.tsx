@@ -70,7 +70,7 @@ async function getEventDetail(id: string): Promise<EventDetailResponse> {
 export default async function EventDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const { schedule, remainingCapacity, isBookable, isPastEvent, isReserved } =
+  const { schedule, isBookable, isPastEvent, isReserved } =
     await getEventDetail(id);
 
   return (

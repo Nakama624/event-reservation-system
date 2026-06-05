@@ -42,10 +42,12 @@ class ContactController extends Controller
         return response()->json($contacts);
     }
 
-    public function contactDetail($contact_id): JsonResponse
+    public function contactDetail($id)
     {
         $contact = Contact::with('contactStatus')
-            ->findOrFail($contact_id);
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
 
         return response()->json($contact);
     }

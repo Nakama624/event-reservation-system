@@ -127,7 +127,7 @@ export default async function EventListPage({ searchParams }: Props) {
                 <th className="px-4 py-3 whitespace-nowrap">講師</th>
                 <th className="px-4 py-3 whitespace-nowrap">残席</th>
                 <th className="px-4 py-3 whitespace-nowrap">金額</th>
-                <th className="px-4 py-3 whitespace-nowrap">状態</th>
+                <th className="px-4 py-3 whitespace-nowrap"></th>
                 <th></th>
               </tr>
             </thead>

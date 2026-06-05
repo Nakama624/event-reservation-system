@@ -11,7 +11,9 @@ test.describe("お問合せ一覧", () => {
     await page.getByLabel("パスワード").fill("password");
     await page.getByRole("button", { name: "ログイン" }).click();
 
-    await expect(page.getByText("ようこそ、テストユーザーさん")).toBeVisible();
+    await expect(
+      page.getByText("ようこそ、テストユーザーさん", { exact: true }),
+    ).toBeVisible();
 
     // お問合せ一覧画面へ遷移
     await page.getByRole("link", { name: "お問合せ一覧" }).click();
@@ -20,6 +22,8 @@ test.describe("お問合せ一覧", () => {
   test("お問合せ一覧から新規作成画面に遷移することができる", async ({
     page,
   }) => {
+    await expect(page).toHaveURL("http://localhost:3000/contact/list");
+
     await page.getByRole("link", { name: "新規作成" }).click();
     await expect(page.getByRole("heading", { name: "お問合せ" })).toBeVisible();
     await expect(

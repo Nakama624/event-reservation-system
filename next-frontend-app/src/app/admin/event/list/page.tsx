@@ -7,21 +7,16 @@ import { formatDateTime } from "@/utils/formatDateTime";
 import Link from "next/link";
 import { adminFetch } from "@/utils/adminFetch";
 
-interface EventItem {
+interface ReservationItem {
   id: number;
+  schedule_id: number;
   event_id: number;
-  title: string;
+  user_name: string;
+  participants: number;
+  payment_status: string;
+  event_title: string;
   instructor_name: string;
   start_at: string;
-  finish_at: string | null;
-  lesson_img1: string;
-  capacity: number;
-  total_participants: number;
-  is_past_event: boolean;
-}
-
-interface EventResponse {
-  events: EventItem[];
 }
 
 interface PaginationResponse<T> {
@@ -39,11 +34,12 @@ type Props = {
     page?: string;
   }>;
 };
-async function getEvents(
+
+async function getReservations(
   keyword = "",
   date = "",
   page = "1",
-): Promise<PaginationResponse<EventItem>> {
+): Promise<PaginationResponse<ReservationItem>> {
   const params = new URLSearchParams();
 
   if (keyword) params.set("keyword", keyword);
@@ -66,23 +62,19 @@ async function getEvents(
     },
   });
 
-  // 未ログイン
   if (res.status === 401) {
     redirect(`/login?callbackUrl=/admin/event/list`);
   }
 
-  // 管理者ではない
   if (res.status === 403) {
     redirect("/event/list");
   }
 
   if (!res.ok) {
-    throw new Error("イベント一覧の取得に失敗しました");
+    throw new Error("予約一覧の取得に失敗しました");
   }
 
-  const data: PaginationResponse<EventItem> = await res.json();
-
-  return data;
+  return res.json();
 }
 
 export default async function EventListPage({ searchParams }: Props) {
@@ -92,8 +84,10 @@ export default async function EventListPage({ searchParams }: Props) {
   const keyword = params?.keyword ?? "";
   const date = params?.date ?? "";
 
-  const events = await getEvents(keyword, date, page);
-  console.log(events);
+  const reservations = await getReservations(keyword, date, page);
+
+  console.log(reservations.data);
+
   return (
     <div className="w-full">
       <section className="flex justify-start">
@@ -111,21 +105,22 @@ export default async function EventListPage({ searchParams }: Props) {
           </h1>
 
           <div className="mt-8 flex justify-center gap-2">
-            {Array.from({ length: events.last_page }, (_, i) => i + 1).map(
-              (pageNumber) => (
-                <Link
-                  key={pageNumber}
-                  href={`/admin/event/list?page=${pageNumber}`}
-                  className={`rounded px-3 py-2 ${
-                    pageNumber === events.current_page
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200"
-                  }`}
-                >
-                  {pageNumber}
-                </Link>
-              ),
-            )}
+            {Array.from(
+              { length: reservations.last_page },
+              (_, i) => i + 1,
+            ).map((pageNumber) => (
+              <Link
+                key={pageNumber}
+                href={`/admin/event/list?page=${pageNumber}`}
+                className={`rounded px-3 py-2 ${
+                  pageNumber === reservations.current_page
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                {pageNumber}
+              </Link>
+            ))}
           </div>
         </div>
 
@@ -133,66 +128,40 @@ export default async function EventListPage({ searchParams }: Props) {
           <table className="w-full">
             <thead>
               <tr className="border border-gray-300 bg-gray-300 h-12 text-lg">
-                <th className="px-4 py-3 whitespace-nowrap"></th>
                 <th className="px-4 py-3 whitespace-nowrap">開催日時</th>
                 <th className="px-4 py-3 whitespace-nowrap">イベント名</th>
                 <th className="px-4 py-3 whitespace-nowrap">講師</th>
-                <th className="px-4 py-3 whitespace-nowrap">申込済人数</th>
-                <th className="px-4 py-3 whitespace-nowrap">状態</th>
+                <th className="px-4 py-3 whitespace-nowrap">予約者</th>
+                <th className="px-4 py-3 whitespace-nowrap">参加人数</th>
+                <th className="px-4 py-3 whitespace-nowrap">支払い状況</th>
                 <th className="px-4 py-3 whitespace-nowrap"></th>
               </tr>
             </thead>
 
             <tbody>
-              {events.data.map((event) => {
-                const startAt = new Date(event.start_at);
-                const isPast = startAt < new Date();
-
-                return (
-                  <tr
-                    key={event.id}
-                    className="text-center h-16 border border-gray-300"
-                  >
-                    <td className="w-32 h-24">
-                      <div className="flex items-center justify-center w-full h-full">
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/event-images/${event.lesson_img1}`}
-                          alt="イベントイメージ"
-                          width={80}
-                          height={48}
-                          className="
-                            object-contain
-                            max-h-20
-                            w-auto
-                            hover:scale-125
-                            transition-transform
-                            duration-300
-                        "
-                        />
-                      </div>
-                    </td>
-                    <td className="px-4">{formatDateTime(event.start_at)}</td>
-                    <td className="px-4">{event.title}</td>
-                    <td className="px-4">{event.instructor_name}</td>
-                    <td className="px-4">{event.total_participants}</td>
-                    <td className="px-4">
-                      {event.is_past_event ? (
-                        <span className="text-gray-400">終了</span>
-                      ) : (
-                        <span className="text-green-600">開催予定</span>
-                      )}
-                    </td>
-                    <td className="px-4">
-                      <LinkButton
-                        href={`/admin/event/${event.id}`}
-                        className="bg-blue-500 text-white"
-                      >
-                        詳細
-                      </LinkButton>
-                    </td>
-                  </tr>
-                );
-              })}
+              {reservations.data.map((reservation) => (
+                <tr
+                  key={reservation.id}
+                  className="text-center h-16 border border-gray-300"
+                >
+                  <td className="px-4">
+                    {formatDateTime(reservation.start_at)}
+                  </td>
+                  <td className="px-4">{reservation.event_title}</td>
+                  <td className="px-4">{reservation.instructor_name}</td>
+                  <td className="px-4">{reservation.user_name}</td>
+                  <td className="px-4">{reservation.participants}</td>
+                  <td className="px-4">{reservation.payment_status}</td>
+                  <td className="px-4">
+                    <LinkButton
+                      href={`/admin/event/${reservation.schedule_id}`}
+                      className="bg-blue-500 text-white"
+                    >
+                      詳細
+                    </LinkButton>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

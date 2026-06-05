@@ -58,17 +58,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // お問合せ完了
     Route::post('/contact/complete', [ContactController::class, 'complete']);
     // 論理削除
-    Route::post('/contact/{contact_id}/delete', [ContactController::class, 'delete']);
+    Route::delete('/contact/{contact_id}/delete', [ContactController::class, 'delete']);
 });
 
 Route::middleware(['auth:sanctum', 'verified', 'admin'])->group(function () {
 
     // 管理者
-    Route::get('/admin/event/list', [AdminController::class, 'adminEventList']);
+    Route::get('/admin/event/list', [AdminController::class, 'adminReservationList']);
 
-    Route::get('/admin/event/{schedule_id}', [AdminController::class, 'adminEventDetail']);
+    Route::get('/admin/event/{schedule_id}', [AdminController::class, 'adminReservationDetail']);
 
-    Route::post('/admin/event/{reservation_id}/paid', [AdminController::class, 'adminReservationPaid']);
+    Route::patch('/admin/event/{reservation_id}/paid', [AdminController::class, 'adminReservationPaid']);
 
     Route::get('/admin/contact/list', [AdminController::class, 'adminContactList']);
 

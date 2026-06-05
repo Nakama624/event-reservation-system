@@ -12,13 +12,15 @@ class PaymentMethodSeeder extends Seeder
      */
     public function run(): void
     {
-        PaymentMethod::create([
-            'payment_method' => 'クレジットカード',
-        ]);
+        PaymentMethod::updateOrCreate(
+            ['id' => 1],
+            ['payment_method' => 'クレジットカード']
+        );
 
-        PaymentMethod::create([
-            'payment_method' => '現地払い',  // 現金を想定
-        ]);
+        PaymentMethod::updateOrCreate(
+            ['id' => 2],
+            ['payment_method' => '現地払い']
+        );
 
     }
 }
