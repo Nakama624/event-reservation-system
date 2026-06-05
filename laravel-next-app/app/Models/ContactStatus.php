@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ContactStatus extends Model
 {
@@ -14,8 +14,8 @@ class ContactStatus extends Model
         'status',
     ];
 
-    public function contact(): HasOne
+    public function contacts(): HasMany
     {
-        return $this->hasOne(Contact::class);
+        return $this->hasMany(Contact::class, 'status_id');
     }
 }

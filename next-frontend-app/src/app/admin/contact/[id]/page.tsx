@@ -95,7 +95,7 @@ export default async function ContactDetailPage({ params }: Props) {
 
           <div className="mt-8 flex justify-center">
             <LinkButton
-              href="/admin/event/list"
+              href="/admin/contact/list"
               className="rounded bg-gray-300 px-4 py-2"
             >
               一覧へ戻る

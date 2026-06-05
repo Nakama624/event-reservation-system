@@ -15,20 +15,25 @@ test.describe("ログイン機能", () => {
     await page.getByRole("button", { name: "ログイン" }).click();
 
     await expect(page).toHaveURL("http://localhost:3000/reservation/list");
-    // await page.waitForURL("**/reservation/list", {
-    //   timeout: 30000,
-    // });
 
     await expect(page.getByText("ようこそ、テストユーザーさん")).toBeVisible();
+
     //メニューの表示
     await expect(
-      page.getByRole("link", { name: "イベント一覧" }),
+      page.getByRole("link", { name: "イベント一覧", exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "イベントカレンダー" }),
+      page.getByRole("link", { name: "過去のイベント一覧", exact: true }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "予約一覧" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "お問合せ" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "イベントカレンダー", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "予約一覧", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "お問合せ一覧", exact: true }),
+    ).toBeVisible();
 
     // 一覧(項目名)の表示
     await expect(page.getByRole("heading", { name: "予約一覧" })).toBeVisible();

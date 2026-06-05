@@ -62,14 +62,13 @@ test.describe("お問合せ一覧", () => {
       page.getByRole("columnheader", { name: "詳細" }),
     ).toBeVisible();
 
-    // 予約行を取得
-    const reservationRow = page.locator("tr").filter({
-      hasText: "2026/05/20 23:46",
-    });
+    await expect(page.getByRole("table")).toBeVisible();
 
+    // 1行目を取得
+    const reservationRow = page.locator("tbody tr").first();
     // 行の中身確認
     // 件名
-    await expect(reservationRow).toContainText("5555");
+    await expect(reservationRow).toContainText("予約時間について");
     // ステータス
     await expect(reservationRow).toContainText("未対応");
   });

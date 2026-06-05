@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('detail');
             $table->string('img')->nullable();
-            $table->foreignId('status_id')->constrained('contacts')->cascadeOnDelete();
+            $table->foreignId('status_id')->constrained('contact_statuses')->cascadeOnDelete();
             $table->timestamps();
         });
     }
