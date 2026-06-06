@@ -80,7 +80,7 @@ http://localhost:8025/
 - phpMyAdmin：http://localhost:8080/
 - MailPit：http://localhost:8025/
 
-## 単体テスト
+## テスト実行
 
 ### DBを作成
 
@@ -92,15 +92,14 @@ http://localhost:8025/
 
 ### .env.testingを作成
 
-- `./vendor/bin/sail exec mysql bash`
-- `cp .env .env.testing`、環境変数を変更
+- `cp .env .env.testing`
 - `./vendor/bin/sail artisan key:generate --env=testing`
 - `./vendor/bin/sail artisan migrate --env=testing`
 
 ### Laravel/Unitテスト実行
 
 - `cd laravel-next-app`
-  `sail artisan test`
+  `./vendor/bin/sail artisan test`
 
 - 1.ログイン機能
   | ファイル名 | テスト内容 |
@@ -152,10 +151,35 @@ http://localhost:8025/
   | | 一般ユーザーは管理者APIにアクセスできない |
   | | 未ログインでは管理者APIにアクセスできない |
 
-### playwrightテスト実行
+### Vitest実行
+`npm test`
+- next-frontend-app/src/tests/components/
+
+| ファイル名                 | テスト内容                                                         |
+| -------------------------- | ------------------------------------------------------------------ |
+| `src/tests/components/EventSearch.test.tsx` | 検索フォームが表示される                                 |
+| `Header.test.tsx`                        | ログイン中のユーザー名が表示される                           |
+|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
+|        | 管理者の場合、ロゴリンクは /admin/event/list になる                                 |
+|                            | ログアウトボタンを押すとLaravel logout後にsignOutされる                           |
+|                            | 読み込み中はLoadingが表示される |
+|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
+|`LinkButton.test.tsx`        | ボタンが表示される                                |
+|                            | 正しく遷移される                           |
+|                            | 読み込み中はLoadingが表示される |
+|`Menu.test.tsx`             | イベント一覧が表示される |
+|                            | 一般ユーザーは予約一覧が表示される |
+|                            | 管理者は全ての予約が表示される |
+
+
+
+
+### playwright実行
 
 `cd next-frontend-app`
 `npx playwright test`
+
+- next-frontend-app/tests/
 
 - 認証系テスト
 
