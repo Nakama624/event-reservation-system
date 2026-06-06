@@ -16,29 +16,29 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 - `git clone git@github.com:Nakama624/event-reservation-system.git`
 - `cd event-reservation-system/laravel-next-app`
 - `docker run --rm \
--u "$(id -u):$(id -g)" \
--v "$(pwd):/var/www/html" \
--w /var/www/html \
--e COMPOSER_CACHE_DIR=/tmp/composer_cache \
-laravelsail/php82-composer:latest \
-composer install`
+  -u "$(id -u):$(id -g)" \
+  -v "$(pwd):/var/www/html" \
+  -w /var/www/html \
+  -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
+  laravelsail/php84-composer:latest \
+  composer install`
 
 - `./vendor/bin/sail up -d`
 
 ### バックエンド(laravel-next-app)
 
 - `./vendor/bin/sail composer install`
-- `cp .env.example .env`、環境変数を変更
-- `sail artisan key:generate`
-- `sail artisan migrate`
-- `sail artisan db:seed`
-- `sail artisan storage:link`
+- `cp .env.example .env`、環境変数を変更(DB_PASSWORDとSTRIPE_SECRETをセット)
+- `./vendor/bin/sail artisan key:generate`
+- `./vendor/bin/sail artisan migrate`
+- `./vendor/bin/sail artisan db:seed`
+- `/vendor/bin/sail artisan storage:link`
 
 ### フロントエンド(next-frontend-app)
 
 - `cd ../next-frontend-app/`
 - `npm install`
-- `cp .env.example .env.local`、環境変数を変更
+- `cp .env.example .env.local`、環境変数を変更（NEXTAUTH_SECRETにランダムな文字列をセット）
 - `npm run dev`
 
 ### mailhog
