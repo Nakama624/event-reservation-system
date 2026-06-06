@@ -19,14 +19,15 @@
 
 - `git clone git@github.com:Nakama624/event-reservation-system.git`
 - `cd event-reservation-system/laravel-next-app`
-- `docker run --rm \
+```bash
+docker run --rm \
   -u "$(id -u):$(id -g)" \
   -v "$(pwd):/var/www/html" \
   -w /var/www/html \
   -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
   laravelsail/php84-composer:latest \
-  composer install`
-
+  composer install
+```
 - `./vendor/bin/sail up -d`
 
 ### バックエンド(laravel-next-app)
