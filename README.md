@@ -41,11 +41,11 @@ REST API連携、認証機能、Stripe決済、MailPit認証など、
 - `cp .env.example .env.local`、環境変数を変更（NEXTAUTH_SECRETにランダムな文字列をセット）
 - `npm run dev`
 
-### mailhog
+### MailPit
 
 http://localhost:8025/
 
-> `.env` ファイルを以下のように修正。
+> `.env` ファイルでMAIL_FROM_ADDRESSが設定されているか確認。
 >
 > ```diff
 > -　MAIL_FROM_ADDRESS=null
