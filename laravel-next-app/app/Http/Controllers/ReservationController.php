@@ -118,6 +118,7 @@ class ReservationController extends Controller
 
         return response()->json([
             'reservation' => $reservation,
+            'reservation_id' => $reservation->id,
         ]);
     }
 

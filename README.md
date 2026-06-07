@@ -2,8 +2,6 @@
 
 ## はじめに
 
-### システム概要
-
 本システムは、イベントの予約・決済・管理を一元的に行うことができる予約管理システムです。ユーザーはイベントの検索・予約・決済を行うことができ、管理者はイベント情報や予約状況を効率的に管理できます。
 
 開発にあたっては、フロントエンドに Next.js、バックエンドに Laravel を使用し、フロントエンドとバックエンドを分離した形で構築しました。双方はAPI連携しており、実際の業務システム開発を意識しております。
@@ -11,7 +9,6 @@
 主な機能として、ユーザー認証機能、イベント予約機能、Stripe を利用したオンライン決済機能、メール認証機能、予約情報管理機能を実装しています。また、開発環境には MailPit を導入し、メール送信機能の検証を効率的に行えるようにしました。
 
 本システムの開発を通じて、API設計・実装、認証・認可処理、決済サービス連携、メール認証機能の実装、フロントエンドとバックエンドの連携など、実務で求められるWebアプリケーション開発スキルの習得を目的としました。
-
 
 ## 環境構築
 
@@ -62,7 +59,6 @@ cp .env.example .env
 ./vendor/bin/sail artisan storage:link
 ```
 
-
 ### フロントエンド(next-frontend-app)
 
 ```bash
@@ -84,20 +80,18 @@ npm run dev
 
 ### MailPit
 
-http://localhost:8025/
+MailPit：http://localhost:8025/
 
 > `.env` ファイルでMAIL_FROM_ADDRESSが設定されているか確認。
 >
 > ```diff
 > -　MAIL_FROM_ADDRESS=null
-> +　MAIL_FROM_ADDRESS=no-reply@example.com
+> +　MAIL_FROM_ADDRESS=(例)no-reply@example.com
 > ```
 
 ### stripe決済
 
-公式テスト詳細
-
-- https://docs.stripe.com/testing
+公式テスト詳細：https://docs.stripe.com/testing
 
 > stripe決済のアカウントを作成し、`.env` ファイルに以下のように追加。
 > https://dashboard.stripe.com/login?locale=ja-JP
@@ -222,8 +216,9 @@ cd laravel-next-app
 ## フロントエンドテスト実行
 
 ### Vitest実行
+
 ```bash
-# フロントエンドのテストを一括実行
+# フロントエンドテストを一括実行
 npm test
 ```
 
@@ -232,32 +227,33 @@ npm test
 next-frontend-app/src/tests/components/
 ```
 
-| ファイル名                 | テスト内容                                                         |
-| -------------------------- | ------------------------------------------------------------------ |
-| `src/tests/components/EventSearch.test.tsx` | 検索フォームが表示される                                 |
-| `Header.test.tsx`                        | ログイン中のユーザー名が表示される                           |
-|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
-|        | 管理者の場合、ロゴリンクは /admin/event/list になる                                 |
-|                            | ログアウトボタンを押すとLaravel logout後にsignOutされる                           |
-|                            | 読み込み中はLoadingが表示される |
-|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
-|`LinkButton.test.tsx`        | ボタンが表示される                                |
-|                            | 正しく遷移される                           |
-|                            | 読み込み中はLoadingが表示される |
-|`Menu.test.tsx`             | イベント一覧が表示される |
-|                            | 一般ユーザーは予約一覧が表示される |
-|                            | 管理者は全ての予約が表示される |
-
-
-
+| ファイル名             | テスト内容                                                |
+| ---------------------- | --------------------------------------------------------- |
+| `EventSearch.test.tsx` | 検索フォームが表示される                                  |
+| `Header.test.tsx`      | ログイン中のユーザー名が表示される                        |
+|                        | 一般ユーザーの場合、ロゴリンクは /reservation/list になる |
+|                        | 管理者の場合、ロゴリンクは /admin/event/list になる       |
+|                        | ログアウトボタンを押すとLaravel logout後にsignOutされる   |
+|                        | 読み込み中はLoadingが表示される                           |
+|                        | 一般ユーザーの場合、ロゴリンクは /reservation/list になる |
+| `LinkButton.test.tsx`  | ボタンが表示される                                        |
+|                        | 正しく遷移される                                          |
+|                        | 読み込み中はLoadingが表示される                           |
+| `Menu.test.tsx`        | イベント一覧が表示される                                  |
+|                        | 一般ユーザーは予約一覧が表示される                        |
+|                        | 管理者は全ての予約が表示される                            |
 
 ### playwright実行
 ```bash
 # フロントエンドディレクトリへ移動
 cd next-frontend-app
 
+```bash
+# フロントエンドディレクトリへ移動
+cd next-frontend-app
+
 # E2Eテストを一括実行
-npx playwright test
+npm run test:e2e
 ```
 
 ```text
@@ -276,7 +272,6 @@ next-frontend-app/tests/
 |                            | 間違った認証情報ではログインできないこと                           |
 |                            | 未ログインで予約一覧画面にアクセスするとログイン画面へ戻されること |
 
-
 - お問い合わせ機能テスト
 
 | ファイル名                      | テスト内容                                               |
@@ -285,7 +280,6 @@ next-frontend-app/tests/
 |                                 | お問合せ内容（詳細）が表示されていること                 |
 | `contact/contact-list.spec.ts`  | お問合せが一覧表示されていること                         |
 |                                 | お問合せ一覧に自分が投稿したお問合せが表示されていること |
-
 
 - お問い合わせ機能テスト
 
@@ -298,7 +292,6 @@ next-frontend-app/tests/
 | `contact/contact.spec.ts`       | お問合せ一覧から新規作成画面に遷移することができる       |
 |                                 | 詳細が未入力の場合エラーメッセージが表示されること       |
 
-
 - イベント閲覧機能テスト
 
 | ファイル名                             | テスト内容                                                     |
@@ -308,7 +301,6 @@ next-frontend-app/tests/
 | `event/event-list.spec.ts`             | イベント一覧が表示されること                                   |
 |                                        | 講師名で検索すると部分一致で検索結果のみが表示されること       |
 |                                        | 日付で検索すると開催日付が一致する検索結果のみが表示されること |
-
 
 - イベント予約機能テスト
 
@@ -375,7 +367,6 @@ next-frontend-app/tests/
 | created_at        | timestamp    |             |            |          |             |
 | updated_at        | timestamp    |             |            |          |             |
 
-
 ### events テーブル
 
 | カラム名           | 型           | primary key | unique key | not null | foreign key |
@@ -394,7 +385,6 @@ next-frontend-app/tests/
 | created_at         | timestamp    |             |            |          |             |
 | updated_at         | timestamp    |             |            |          |             |
 
-
 ### schedulesテーブル
 
 | カラム名   | 型        | primary key | unique key | not null | foreign key |
@@ -405,7 +395,6 @@ next-frontend-app/tests/
 | finish_at  | datetime  |             |            | ◯        |             |
 | created_at | timestamp |             |            |          |             |
 | updated_at | timestamp |             |            |          |             |
-
 
 ### reservationsテーブル
 
@@ -425,7 +414,6 @@ next-frontend-app/tests/
 | created_at         | timestamp    |             |            |          |                     |
 | updated_at         | timestamp    |             |            |          |                     |
 
-
 ### contactsテーブル
 
 | カラム名   | 型           | primary key | unique key | not null | foreign key        |
@@ -438,7 +426,6 @@ next-frontend-app/tests/
 | created_at | timestamp    |             |            |          |                    |
 | updated_at | timestamp    |             |            |          |                    |
 
-
 ### payment_methodsテーブル
 
 | カラム名       | 型           | primary key | unique key | not null | foreign key |
@@ -447,7 +434,6 @@ next-frontend-app/tests/
 | payment_method | varchar(255) |             |            | ◯        |             |
 | created_at     | timestamp    |             |            |          |             |
 | updated_at     | timestamp    |             |            |          |             |
-
 
 ### contact_statusesテーブル
 
@@ -783,4 +769,10 @@ next-frontend-app/tests/
 
 ## ![alt text](readme_images/Admin_ContactDetail.png)
 
+## おわりに
 
+本システムは、イベント予約から決済、問い合わせ管理までを一貫して行えるWebアプリケーションとして開発しました。
+
+開発過程では、Laravel・Next.jsによるAPI連携、認証・認可、決済機能、テストコードの実装など、実務を意識した設計・開発を経験することができました。
+
+今後はユーザー体験の向上や運用面での課題解決を意識しながら、実際の業務システムを想定した機能改善や機能追加を継続して行い、より完成度の高いシステムへ発展させていきたいと考えています。

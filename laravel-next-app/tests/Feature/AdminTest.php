@@ -40,17 +40,25 @@ class AdminTest extends TestCase
         ]);
     }
 
-    // 管理者は管理者用イベント一覧を取得できる
+    // 管理者は予約が入ってる予約一覧を取得できる
     public function test_admin_can_get_admin_event_list()
     {
         $event = Event::factory()->create([
             'title' => '管理者用イベント',
+            'instructor_name' => '管理者用講師',
         ]);
 
-        Schedule::factory()->create([
+        $schedule = Schedule::factory()->create([
             'event_id' => $event->id,
             'start_at' => now()->addDay(),
             'finish_at' => now()->addDay()->addHour(),
+        ]);
+
+        Reservation::factory()->create([
+            'schedule_id' => $schedule->id,
+            'user_id' => $this->user->id,
+            'participants' => 1,
+            'payment_status' => '未払い',
         ]);
 
         $response = $this->actingAs($this->admin)
@@ -59,10 +67,9 @@ class AdminTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonFragment([
-            'title' => '管理者用イベント',
+            'event_title' => '管理者用イベント',
         ]);
     }
-
     // 管理者はイベント詳細・予約者一覧を取得できる
     public function test_admin_can_get_event_detail_and_reservation_list()
     {
