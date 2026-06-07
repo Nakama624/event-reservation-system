@@ -11,7 +11,7 @@ test("イベント一覧が表示される", () => {
     vi.mocked(useSession).mockReturnValue({
         data: null,
         status: "unauthenticated",
-    } as any);
+    } as ReturnType<typeof useSession>);
 
     render(<Menu />);
 
@@ -26,7 +26,7 @@ test("一般ユーザーは予約一覧が表示される", () => {
             },
         },
         status: "authenticated",
-    } as any);
+    } as ReturnType<typeof useSession>);
 
     render(<Menu />);
 
@@ -41,7 +41,7 @@ test("管理者は全ての予約が表示される", () => {
             },
         },
         status: "authenticated",
-    } as any);
+    } as ReturnType<typeof useSession>);
 
     render(<Menu />);
 

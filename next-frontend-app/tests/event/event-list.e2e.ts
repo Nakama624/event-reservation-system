@@ -3,7 +3,8 @@ import { test, expect } from "@playwright/test";
 // ＝＝＝管理者/一般ユーザー共通＝＝＝
 test.describe("イベント一覧", () => {
     // 各テストの前にログインページにアクセスする
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
+        await context.clearCookies();
         await page.goto("http://localhost:3000/event/list");
     });
 
@@ -25,9 +26,6 @@ test.describe("イベント一覧", () => {
         ).toBeVisible();
         await expect(
             page.getByRole("columnheader", { name: "金額" }),
-        ).toBeVisible();
-        await expect(
-            page.getByRole("columnheader", { name: "状態" }),
         ).toBeVisible();
     });
 

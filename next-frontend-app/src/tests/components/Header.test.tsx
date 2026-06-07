@@ -9,8 +9,11 @@ vi.mock("next-auth/react", () => ({
 }));
 
 vi.mock("next/image", () => ({
-    default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
-        return <img {...props} />;
+    default: ({
+        alt = "",
+        ...props
+    }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+        return <img alt={alt} {...props} />;
     },
 }));
 
@@ -29,7 +32,7 @@ describe("Header", () => {
                 accessToken: "test-token",
             },
             status: "authenticated",
-        } as any);
+        } as ReturnType<typeof useSession>);
 
         render(<Header />);
 
@@ -48,7 +51,7 @@ describe("Header", () => {
                 accessToken: "test-token",
             },
             status: "authenticated",
-        } as any);
+        } as ReturnType<typeof useSession>);
 
         render(<Header />);
 
@@ -68,7 +71,7 @@ describe("Header", () => {
                 accessToken: "test-token",
             },
             status: "authenticated",
-        } as any);
+        } as ReturnType<typeof useSession>);
 
         render(<Header />);
 
@@ -81,7 +84,7 @@ describe("Header", () => {
     test("ログアウトボタンを押すとLaravel logout後にsignOutされる", async () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok: true,
-        }) as any;
+        } as Response);
 
         vi.mocked(useSession).mockReturnValue({
             data: {
@@ -92,7 +95,7 @@ describe("Header", () => {
                 accessToken: "test-token",
             },
             status: "authenticated",
-        } as any);
+        } as ReturnType<typeof useSession>);
 
         render(<Header />);
 
@@ -120,7 +123,7 @@ describe("Header", () => {
         vi.mocked(useSession).mockReturnValue({
             data: null,
             status: "loading",
-        } as any);
+        } as ReturnType<typeof useSession>);
 
         render(<Header />);
 

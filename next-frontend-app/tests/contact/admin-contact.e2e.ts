@@ -3,7 +3,9 @@ import { test, expect } from "@playwright/test";
 // ＝＝＝管理者のみ＝＝＝
 test.describe("お問合せ機能", () => {
     // 各テストの前にログインページにアクセスする
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
+        await context.clearCookies();
+
         await page.goto("http://localhost:3000/login");
 
         // 管理者アカウントでログイン

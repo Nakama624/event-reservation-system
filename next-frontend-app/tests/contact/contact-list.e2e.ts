@@ -2,21 +2,29 @@ import { test, expect } from "@playwright/test";
 
 // ＝＝＝一般ユーザーのみ＝＝＝
 test.describe("お問合せ一覧", () => {
-    test.beforeEach(async ({ page }) => {
-        // 各テストの前にログインページにアクセスする
+    test.beforeEach(async ({ page, context }) => {
+        await context.clearCookies();
+
         await page.goto("http://localhost:3000/login");
 
-        // ログイン
         await page.getByLabel("メールアドレス").fill("user@example.com");
         await page.getByLabel("パスワード").fill("password");
         await page.getByRole("button", { name: "ログイン" }).click();
 
+        await page.waitForTimeout(1000);
+
+        // まずログイン成功を待つ
+        await expect(page).not.toHaveURL(/\/login/);
+
         await expect(
-            page.getByText("ようこそ、テストユーザーさん"),
+            page.getByText("ようこそ、テストユーザーさん", { exact: true }),
         ).toBeVisible();
 
-        // お問合せ一覧画面へ遷移
-        await page.getByRole("link", { name: "お問合せ一覧" }).click();
+        await page
+            .getByRole("link", { name: "お問合せ一覧", exact: true })
+            .click();
+
+        await expect(page).toHaveURL("http://localhost:3000/contact/list");
     });
 
     test("お問合せが一覧表示されている", async ({ page }) => {
