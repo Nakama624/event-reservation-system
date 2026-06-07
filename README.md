@@ -2,8 +2,6 @@
 
 ## はじめに
 
-### システム概要
-
 本システムは、イベントの予約・決済・管理を一元的に行うことができる予約管理システムです。ユーザーはイベントの検索・予約・決済を行うことができ、管理者はイベント情報や予約状況を効率的に管理できます。
 
 開発にあたっては、フロントエンドに Next.js、バックエンドに Laravel を使用し、フロントエンドとバックエンドを分離した形で構築しました。双方はAPI連携しており、実際の業務システム開発を意識しております。
@@ -12,62 +10,94 @@
 
 本システムの開発を通じて、API設計・実装、認証・認可処理、決済サービス連携、メール認証機能の実装、フロントエンドとバックエンドの連携など、実務で求められるWebアプリケーション開発スキルの習得を目的としました。
 
-
 ## 環境構築
 
 ### Dockerビルド
 
-- `git clone git@github.com:Nakama624/event-reservation-system.git`
-- `cd event-reservation-system/laravel-next-app`
-- `docker run --rm \
+```bash
+# リポジトリをクローン
+git clone git@github.com:Nakama624/event-reservation-system.git
+
+# プロジェクトディレクトリへ移動
+cd event-reservation-system/laravel-next-app
+
+# Composer パッケージをインストール
+docker run --rm \
   -u "$(id -u):$(id -g)" \
   -v "$(pwd):/var/www/html" \
   -w /var/www/html \
   -e COMPOSER_CACHE_DIR=/tmp/composer_cache \
   laravelsail/php84-composer:latest \
-  composer install`
+  composer install
 
-- `./vendor/bin/sail up -d`
+# Sail を起動
+./vendor/bin/sail up -d
+```
 
 ### バックエンド(laravel-next-app)
 
-- `./vendor/bin/sail composer install`
-- `cp .env.example .env`、環境変数を変更(DB_PASSWORDとSTRIPE_SECRETをセット)
-- `./vendor/bin/sail artisan key:generate`
-- `./vendor/bin/sail artisan migrate`
-- `./vendor/bin/sail artisan db:seed`
-- `/vendor/bin/sail artisan storage:link`
+```bash
+# Composer パッケージをインストール
+./vendor/bin/sail composer install
+
+# 環境変数ファイルを作成
+cp .env.example .env
+
+# .env を編集
+# DB_PASSWORD と STRIPE_SECRET を設定
+
+# アプリケーションキーを生成
+./vendor/bin/sail artisan key:generate
+
+# マイグレーションを実行
+./vendor/bin/sail artisan migrate
+
+# シーダーを実行
+./vendor/bin/sail artisan db:seed
+
+# ストレージリンクを作成
+./vendor/bin/sail artisan storage:link
+```
 
 ### フロントエンド(next-frontend-app)
 
-- `cd ../next-frontend-app/`
-- `npm install`
-- `cp .env.example .env.local`、環境変数を変更（NEXTAUTH_SECRETにランダムな文字列をセット）
-- `npm run dev`
+```bash
+# フロントエンドディレクトリへ移動
+cd ../next-frontend-app/
+
+# パッケージをインストール
+npm install
+
+# 環境変数ファイルを作成
+cp .env.example .env.local
+
+# .env.local を編集
+# NEXTAUTH_SECRET にランダムな文字列を設定
+
+# 開発サーバーを起動
+npm run dev
+```
 
 ### MailPit
 
-http://localhost:8025/
+MailPit：http://localhost:8025/
 
 > `.env` ファイルでMAIL_FROM_ADDRESSが設定されているか確認。
 >
 > ```diff
 > -　MAIL_FROM_ADDRESS=null
-> +　MAIL_FROM_ADDRESS=no-reply@example.com
+> +　MAIL_FROM_ADDRESS=(例)no-reply@example.com
 > ```
 
 ### stripe決済
 
-公式テスト詳細
-
-- https://docs.stripe.com/testing
+公式テスト詳細：https://docs.stripe.com/testing
 
 > stripe決済のアカウントを作成し、`.env` ファイルに以下のように追加。
 > https://dashboard.stripe.com/login?locale=ja-JP
 >
 > ```diff
 > +　STRIPE_SECRET=（stripe決済各ユーザーアカウントのシークレットキー）
-> +　APP_URL=http://localhost
 > ```
 
 #### 実行テスト/クレジットカード（VISA/成功）
@@ -84,26 +114,54 @@ http://localhost:8025/
 - phpMyAdmin：http://localhost:8080/
 - MailPit：http://localhost:8025/
 
-## テスト実行
+## バックエンドテスト実行
 
 ### DBを作成
 
-- `cd laravel-next-app`
-- `./vendor/bin/sail exec mysql bash`
-- `mysql -u root -p`、パスワード入力
-- `CREATE DATABASE demo_test;`
-- `exit`
+```bash
+# Laravel プロジェクトディレクトリへ移動
+cd laravel-next-app
+
+# MySQL コンテナへ接続
+./vendor/bin/sail exec mysql bash
+
+# MySQL にログイン
+mysql -u root -p
+
+# パスワードを入力
+
+# テスト用データベースを作成
+CREATE DATABASE demo_test;
+
+# MySQL を終了
+exit
+
+# コンテナを終了
+exit
+```
 
 ### .env.testingを作成
 
-- `cp .env .env.testing`
-- `./vendor/bin/sail artisan key:generate --env=testing`
-- `./vendor/bin/sail artisan migrate --env=testing`
+```bash
+# テスト環境用の環境変数ファイルを作成
+cp .env .env.testing
+
+# テスト環境用のアプリケーションキーを生成
+./vendor/bin/sail artisan key:generate --env=testing
+
+# テスト環境用のマイグレーションを実行
+./vendor/bin/sail artisan migrate --env=testing
+```
 
 ### Laravel/Unitテスト実行
 
-- `cd laravel-next-app`
-  `./vendor/bin/sail artisan test`
+```bash
+# Laravel プロジェクトディレクトリへ移動
+cd laravel-next-app
+
+# テストを一括実行
+./vendor/bin/sail artisan test
+```
 
 - 1.ログイン機能
   | ファイル名 | テスト内容 |
@@ -155,35 +213,50 @@ http://localhost:8025/
   | | 一般ユーザーは管理者APIにアクセスできない |
   | | 未ログインでは管理者APIにアクセスできない |
 
+## フロントエンドテスト実行
+
 ### Vitest実行
-`npm test`
-- next-frontend-app/src/tests/components/
 
-| ファイル名                 | テスト内容                                                         |
-| -------------------------- | ------------------------------------------------------------------ |
-| `src/tests/components/EventSearch.test.tsx` | 検索フォームが表示される                                 |
-| `Header.test.tsx`                        | ログイン中のユーザー名が表示される                           |
-|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
-|        | 管理者の場合、ロゴリンクは /admin/event/list になる                                 |
-|                            | ログアウトボタンを押すとLaravel logout後にsignOutされる                           |
-|                            | 読み込み中はLoadingが表示される |
-|                            | 一般ユーザーの場合、ロゴリンクは /reservation/list になる     |
-|`LinkButton.test.tsx`        | ボタンが表示される                                |
-|                            | 正しく遷移される                           |
-|                            | 読み込み中はLoadingが表示される |
-|`Menu.test.tsx`             | イベント一覧が表示される |
-|                            | 一般ユーザーは予約一覧が表示される |
-|                            | 管理者は全ての予約が表示される |
+```bash
+# フロントエンドテストを一括実行
+npm test
+```
 
+```text
+# テストファイル配置場所
+next-frontend-app/src/tests/components/
+```
 
-
+| ファイル名             | テスト内容                                                |
+| ---------------------- | --------------------------------------------------------- |
+| `EventSearch.test.tsx` | 検索フォームが表示される                                  |
+| `Header.test.tsx`      | ログイン中のユーザー名が表示される                        |
+|                        | 一般ユーザーの場合、ロゴリンクは /reservation/list になる |
+|                        | 管理者の場合、ロゴリンクは /admin/event/list になる       |
+|                        | ログアウトボタンを押すとLaravel logout後にsignOutされる   |
+|                        | 読み込み中はLoadingが表示される                           |
+|                        | 一般ユーザーの場合、ロゴリンクは /reservation/list になる |
+| `LinkButton.test.tsx`  | ボタンが表示される                                        |
+|                        | 正しく遷移される                                          |
+|                        | 読み込み中はLoadingが表示される                           |
+| `Menu.test.tsx`        | イベント一覧が表示される                                  |
+|                        | 一般ユーザーは予約一覧が表示される                        |
+|                        | 管理者は全ての予約が表示される                            |
 
 ### playwright実行
 
-`cd next-frontend-app`
-`npx playwright test`
+```bash
+# フロントエンドディレクトリへ移動
+cd next-frontend-app
 
-- next-frontend-app/tests/
+# E2Eテストを一括実行
+npm run test:e2e
+```
+
+```text
+# テストファイル配置場所
+next-frontend-app/tests/
+```
 
 - 認証系テスト
 
@@ -196,8 +269,6 @@ http://localhost:8025/
 |                            | 間違った認証情報ではログインできないこと                           |
 |                            | 未ログインで予約一覧画面にアクセスするとログイン画面へ戻されること |
 
----
-
 - お問い合わせ機能テスト
 
 | ファイル名                      | テスト内容                                               |
@@ -206,8 +277,6 @@ http://localhost:8025/
 |                                 | お問合せ内容（詳細）が表示されていること                 |
 | `contact/contact-list.spec.ts`  | お問合せが一覧表示されていること                         |
 |                                 | お問合せ一覧に自分が投稿したお問合せが表示されていること |
-
----
 
 - お問い合わせ機能テスト
 
@@ -220,8 +289,6 @@ http://localhost:8025/
 | `contact/contact.spec.ts`       | お問合せ一覧から新規作成画面に遷移することができる       |
 |                                 | 詳細が未入力の場合エラーメッセージが表示されること       |
 
----
-
 - イベント閲覧機能テスト
 
 | ファイル名                             | テスト内容                                                     |
@@ -231,8 +298,6 @@ http://localhost:8025/
 | `event/event-list.spec.ts`             | イベント一覧が表示されること                                   |
 |                                        | 講師名で検索すると部分一致で検索結果のみが表示されること       |
 |                                        | 日付で検索すると開催日付が一致する検索結果のみが表示されること |
-
----
 
 - イベント予約機能テスト
 
@@ -279,6 +344,105 @@ http://localhost:8025/
 
 ![alt text](readme_images/screen_transition.png)
 
+## ER図
+
+![alt text](readme_images/table_definition.png)
+
+## テーブル仕様
+
+### users テーブル
+
+| カラム名          | 型           | primary key | unique key | not null | foreign key |
+| ----------------- | ------------ | ----------- | ---------- | -------- | ----------- |
+| id                | bigint       | ◯           |            | ◯        |             |
+| name              | varchar(255) |             |            | ◯        |             |
+| email             | varchar(255) |             | ◯          | ◯        |             |
+| password          | varchar(255) |             |            | ◯        |             |
+| is_manager        | tinyint(1)   |             |            |          |             |
+| email_verified_at | timestamp    |             |            |          |             |
+| remenber_token    | VARCHAR(100) |             |            |          |             |
+| created_at        | timestamp    |             |            |          |             |
+| updated_at        | timestamp    |             |            |          |             |
+
+### events テーブル
+
+| カラム名           | 型           | primary key | unique key | not null | foreign key |
+| ------------------ | ------------ | ----------- | ---------- | -------- | ----------- |
+| id                 | bigint       | ◯           |            | ◯        |             |
+| title              | varchar(255) |             |            | ◯        |             |
+| capacity           | bigint       |             |            | ◯        |             |
+| lesson_img1        | varchar(255) |             |            | ◯        |             |
+| lesson_img2        | varchar(255) |             |            |          |             |
+| lesson_img3        | varchar(255) |             |            |          |             |
+| catch_copy         | varchar(255) |             |            | ◯        |             |
+| instructor_name    | varchar(255) |             |            | ◯        |             |
+| instructor_img     | varchar(255) |             |            |          |             |
+| instructor_profile | text         |             |            |          |             |
+| price              | unsigned int |             |            | ◯        |             |
+| created_at         | timestamp    |             |            |          |             |
+| updated_at         | timestamp    |             |            |          |             |
+
+### schedulesテーブル
+
+| カラム名   | 型        | primary key | unique key | not null | foreign key |
+| ---------- | --------- | ----------- | ---------- | -------- | ----------- |
+| id         | bigint    | ◯           |            | ◯        |             |
+| event_id   | bigint    |             |            | ◯        | event(id)   |
+| start_at   | datetime  |             |            | ◯        |             |
+| finish_at  | datetime  |             |            | ◯        |             |
+| created_at | timestamp |             |            |          |             |
+| updated_at | timestamp |             |            |          |             |
+
+### reservationsテーブル
+
+| カラム名           | 型           | primary key | unique key | not null | foreign key         |
+| ------------------ | ------------ | ----------- | ---------- | -------- | ------------------- |
+| id                 | bigint       | ◯           |            | ◯        |                     |
+| user_id            | bigint       |             |            | ◯        | user(id)            |
+| schedule_id        | bigint       |             |            | ◯        | schedule(id)        |
+| contact_number     | varchar(255) |             |            | ◯        |                     |
+| participants       | unsigned int |             |            | ◯        |                     |
+| amount             | unsigned int |             |            | ◯        |                     |
+| payment_status     | varchar(255) |             |            | ◯        |                     |
+| payment_methods_id | bigint       |             |            | ◯        | payment_methods(id) |
+| payment_updated_by | bigint       |             |            |          | user(id)            |
+| paid_at            | datetime     |             |            |          |                     |
+| is_canceled        | tinyint(1)   |             |            |          |                     |
+| created_at         | timestamp    |             |            |          |                     |
+| updated_at         | timestamp    |             |            |          |                     |
+
+### contactsテーブル
+
+| カラム名   | 型           | primary key | unique key | not null | foreign key        |
+| ---------- | ------------ | ----------- | ---------- | -------- | ------------------ |
+| id         | bigint       | ◯           |            | ◯        |                    |
+| title      | varchar(255) |             |            | ◯        |                    |
+| detail     | text         |             |            | ◯        |                    |
+| img        | varchar(255) |             |            |          |                    |
+| status_id  | bigint       |             |            | ◯        | contact_status(id) |
+| created_at | timestamp    |             |            |          |                    |
+| updated_at | timestamp    |             |            |          |                    |
+
+### payment_methodsテーブル
+
+| カラム名       | 型           | primary key | unique key | not null | foreign key |
+| -------------- | ------------ | ----------- | ---------- | -------- | ----------- |
+| id             | bigint       | ◯           |            | ◯        |             |
+| payment_method | varchar(255) |             |            | ◯        |             |
+| created_at     | timestamp    |             |            |          |             |
+| updated_at     | timestamp    |             |            |          |             |
+
+### contact_statusesテーブル
+
+| カラム名   | 型           | primary key | unique key | not null | foreign key |
+| ---------- | ------------ | ----------- | ---------- | -------- | ----------- |
+| id         | bigint       | ◯           |            | ◯        |             |
+| status     | varchar(255) |             |            | ◯        |             |
+| created_at | timestamp    |             |            |          |             |
+| updated_at | timestamp    |             |            |          |             |
+
+---
+
 ## 画面一覧・機能一覧
 
 ### 認証について
@@ -305,6 +469,8 @@ http://localhost:8025/
 |                  | ログイン成功時の画面遷移 |
 
 ## ![alt text](readme_images/Login.png)
+
+---
 
 ### 2. 新規会員登録画面
 
@@ -423,6 +589,8 @@ http://localhost:8025/
 |                  | 二重送信防止                      |
 
 ![alt text](readme_images/Reservation_Confirm.png)
+
+---
 
 ### 10. Stripe決済画面(外部画面)
 
@@ -598,111 +766,10 @@ http://localhost:8025/
 
 ## ![alt text](readme_images/Admin_ContactDetail.png)
 
-## ER図
+## おわりに
 
-![alt text](readme_images/image.png)
+本システムは、イベント予約から決済、問い合わせ管理までを一貫して行えるWebアプリケーションとして開発しました。
 
-## テーブル仕様
+開発過程では、Laravel・Next.jsによるAPI連携、認証・認可、決済機能、テストコードの実装など、実務を意識した設計・開発を経験することができました。
 
-### users テーブル
-
-| カラム名          | 型           | primary key | unique key | not null | foreign key |
-| ----------------- | ------------ | ----------- | ---------- | -------- | ----------- |
-| id                | bigint       | ◯           |            | ◯        |             |
-| name              | varchar(255) |             |            | ◯        |             |
-| email             | varchar(255) |             | ◯          | ◯        |             |
-| password          | varchar(255) |             |            | ◯        |             |
-| is_manager        | tinyint(1)   |             |            |          |             |
-| email_verified_at | timestamp    |             |            |          |             |
-| remenber_token    | VARCHAR(100) |             |            |          |             |
-| created_at        | timestamp    |             |            |          |             |
-| updated_at        | timestamp    |             |            |          |             |
-
----
-
-### events テーブル
-
-| カラム名           | 型           | primary key | unique key | not null | foreign key |
-| ------------------ | ------------ | ----------- | ---------- | -------- | ----------- |
-| id                 | bigint       | ◯           |            | ◯        |             |
-| title              | varchar(255) |             |            | ◯        |             |
-| capacity           | bigint       |             |            | ◯        |             |
-| lesson_img1        | varchar(255) |             |            | ◯        |             |
-| lesson_img2        | varchar(255) |             |            |          |             |
-| lesson_img3        | varchar(255) |             |            |          |             |
-| catch_copy         | varchar(255) |             |            | ◯        |             |
-| instructor_name    | varchar(255) |             |            | ◯        |             |
-| instructor_img     | varchar(255) |             |            |          |             |
-| instructor_profile | text         |             |            |          |             |
-| price              | unsigned int |             |            | ◯        |             |
-| created_at         | timestamp    |             |            |          |             |
-| updated_at         | timestamp    |             |            |          |             |
-
----
-
-### schedulesテーブル
-
-| カラム名   | 型        | primary key | unique key | not null | foreign key |
-| ---------- | --------- | ----------- | ---------- | -------- | ----------- |
-| id         | bigint    | ◯           |            | ◯        |             |
-| event_id   | bigint    |             |            | ◯        | event(id)   |
-| start_at   | datetime  |             |            | ◯        |             |
-| finish_at  | datetime  |             |            | ◯        |             |
-| created_at | timestamp |             |            |          |             |
-| updated_at | timestamp |             |            |          |             |
-
----
-
-### reservationsテーブル
-
-| カラム名           | 型           | primary key | unique key | not null | foreign key         |
-| ------------------ | ------------ | ----------- | ---------- | -------- | ------------------- |
-| id                 | bigint       | ◯           |            | ◯        |                     |
-| user_id            | bigint       |             |            | ◯        | user(id)            |
-| schedule_id        | bigint       |             |            | ◯        | schedule(id)        |
-| contact_number     | varchar(255) |             |            | ◯        |                     |
-| participants       | unsigned int |             |            | ◯        |                     |
-| amount             | unsigned int |             |            | ◯        |                     |
-| payment_status     | varchar(255) |             |            | ◯        |                     |
-| payment_methods_id | bigint       |             |            | ◯        | payment_methods(id) |
-| payment_updated_by | bigint       |             |            |          | user(id)            |
-| paid_at            | datetime     |             |            |          |                     |
-| is_canceled        | tinyint(1)   |             |            |          |                     |
-| created_at         | timestamp    |             |            |          |                     |
-| updated_at         | timestamp    |             |            |          |                     |
-
----
-
-### contactsテーブル
-
-| カラム名   | 型           | primary key | unique key | not null | foreign key        |
-| ---------- | ------------ | ----------- | ---------- | -------- | ------------------ |
-| id         | bigint       | ◯           |            | ◯        |                    |
-| title      | varchar(255) |             |            | ◯        |                    |
-| detail     | text         |             |            | ◯        |                    |
-| img        | varchar(255) |             |            |          |                    |
-| status_id  | bigint       |             |            | ◯        | contact_status(id) |
-| created_at | timestamp    |             |            |          |                    |
-| updated_at | timestamp    |             |            |          |                    |
-
----
-
-### payment_methodsテーブル
-
-| カラム名       | 型           | primary key | unique key | not null | foreign key |
-| -------------- | ------------ | ----------- | ---------- | -------- | ----------- |
-| id             | bigint       | ◯           |            | ◯        |             |
-| payment_method | varchar(255) |             |            | ◯        |             |
-| created_at     | timestamp    |             |            |          |             |
-| updated_at     | timestamp    |             |            |          |             |
-
----
-
-### contact_statusesテーブル
-
-| カラム名   | 型           | primary key | unique key | not null | foreign key |
-| ---------- | ------------ | ----------- | ---------- | -------- | ----------- |
-| id         | bigint       | ◯           |            | ◯        |             |
-| status     | varchar(255) |             |            | ◯        |             |
-| created_at | timestamp    |             |            |          |             |
-| updated_at | timestamp    |             |            |          |             |
+今後はユーザー体験の向上や運用面での課題解決を意識しながら、実際の業務システムを想定した機能改善や機能追加を継続して行い、より完成度の高いシステムへ発展させていきたいと考えています。
