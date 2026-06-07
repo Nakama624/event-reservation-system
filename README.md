@@ -244,6 +244,9 @@ next-frontend-app/src/tests/components/
 |                        | 管理者は全ての予約が表示される                            |
 
 ### playwright実行
+```bash
+# フロントエンドディレクトリへ移動
+cd next-frontend-app
 
 ```bash
 # フロントエンドディレクトリへ移動
