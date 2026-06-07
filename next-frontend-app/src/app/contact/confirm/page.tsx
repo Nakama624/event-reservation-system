@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import FormButton from "@/components/FormButton";
 
 interface Contact {
     title: string;
@@ -105,13 +106,13 @@ export default function ContactConfirm() {
                     </div>
 
                     <div className="flex justify-center">
-                        <button
+                        <FormButton
                             type="button"
                             onClick={handleComplete}
                             className="bg-blue-500 text-white px-4 py-2 rounded"
                         >
                             送信する
-                        </button>
+                        </FormButton>
                     </div>
                 </div>
             </div>

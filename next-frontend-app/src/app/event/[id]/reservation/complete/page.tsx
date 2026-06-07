@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LinkButton from "@/components/LinkButton";
 
 export default function ReservationCompletePage() {
     return (
@@ -6,12 +6,12 @@ export default function ReservationCompletePage() {
             <h1 className="text-3xl font-bold">ご予約ありがとうございました</h1>
 
             <div className="mt-10">
-                <Link
+                <LinkButton
                     href="/reservation/list"
-                    className="text-blue-500 underline"
+                    className="rounded bg-gray-300 px-4 py-2"
                 >
                     ご予約一覧へ
-                </Link>
+                </LinkButton>
             </div>
         </div>
     );

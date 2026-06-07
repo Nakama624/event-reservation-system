@@ -152,7 +152,7 @@ export default function ContactPage() {
                         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                             <FormButton
                                 type="submit"
-                                className="w-full bg-blue-600 font-bold text-white sm:w-auto"
+                                className="w-full bg-blue-600 text-white sm:w-auto"
                             >
                                 確認画面へ
                             </FormButton>
