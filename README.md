@@ -712,6 +712,8 @@ next-frontend-app/tests/
 
 ## ![alt text](readme_images/Contact_Detail.png)
 
+---
+
 ## 管理者向け画面
 
 ### 19. 予約一覧管理画面
