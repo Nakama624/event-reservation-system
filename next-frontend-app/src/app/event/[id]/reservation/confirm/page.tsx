@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { formatDateTime } from "@/utils/formatDateTime";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import FormButton from "@/components/FormButton";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -20,6 +23,69 @@ export default async function EventReserveConfirmPage({ params }: Props) {
     const data = JSON.parse(saved);
 
     const { schedule, reserve, paymentMethod } = data;
+
+    async function completeReservation() {
+        "use server";
+
+        const session = await getServerSession(authOptions);
+
+        if (!session?.accessToken) {
+            redirect("/login");
+        }
+
+        const formData = new FormData();
+        formData.append("participants", String(reserve.participants));
+        formData.append("contact_number", reserve.contact_number);
+        formData.append("payment_method_id", String(reserve.payment_method_id));
+
+        const completeRes = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/${id}/reservation/complete`,
+            {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${session.accessToken}`,
+                },
+                body: formData,
+            },
+        );
+
+        if (!completeRes.ok) {
+            throw new Error("予約処理に失敗しました");
+        }
+
+        const completeData = await completeRes.json();
+
+        if (paymentMethod.payment_method === "クレジットカード") {
+            const stripeFormData = new FormData();
+            stripeFormData.append(
+                "reservation_id",
+                String(completeData.reservation_id),
+            );
+
+            const stripeRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/event/${id}/reservation/stripe`,
+                {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${session.accessToken}`,
+                    },
+                    body: stripeFormData,
+                },
+            );
+
+            if (!stripeRes.ok) {
+                throw new Error("Stripe決済処理に失敗しました");
+            }
+
+            const stripeData = await stripeRes.json();
+
+            redirect(stripeData.url);
+        }
+
+        redirect(`/event/${id}/reservation/complete`);
+    }
 
     return (
         <div className="w-[700px] mx-auto mt-20">
@@ -76,13 +142,15 @@ export default async function EventReserveConfirmPage({ params }: Props) {
                         </p>
                     </div>
                     <form
-                        action={`/api/event/${id}/reservation/complete`}
-                        method="post"
+                        action={completeReservation}
                         className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
                     >
-                        <button className="w-full rounded-lg bg-blue-600 px-8 py-3 font-bold text-white hover:bg-blue-700 sm:w-auto">
+                        <FormButton
+                            type="submit"
+                            className="w-full bg-blue-600 text-white sm:w-auto"
+                        >
                             予約を確定する
-                        </button>
+                        </FormButton>
                     </form>
                 </div>
             </div>

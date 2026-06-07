@@ -4,6 +4,7 @@ import { useState } from "react";
 import LinkButton from "@/components/LinkButton";
 import { PaymentMethod, Schedule } from "../types";
 import { formatDateTime } from "@/utils/formatDateTime";
+import FormButton from "@/components/FormButton";
 
 interface Errors {
     payment_method_id?: string[];
@@ -146,13 +147,16 @@ export default function EventReserveForm({
                     </div>
                 </div>
                 <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                    <button className="w-full rounded-lg bg-blue-600 px-8 py-3 font-bold text-white hover:bg-blue-700 sm:w-auto">
+                    <FormButton
+                        type="submit"
+                        className="w-full bg-blue-600 text-white sm:w-auto"
+                    >
                         確認画面へ
-                    </button>
+                    </FormButton>
 
                     <LinkButton
                         href="/event/list"
-                        className="w-full rounded-lg bg-gray-200 px-8 py-4 font-bold text-gray-700 hover:bg-gray-300 sm:w-auto"
+                        className="w-full bg-gray-200 rounded px-4 py-2 text-sm text-gray-700  sm:w-auto"
                     >
                         キャンセル
                     </LinkButton>

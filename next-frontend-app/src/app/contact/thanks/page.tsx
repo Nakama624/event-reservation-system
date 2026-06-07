@@ -17,7 +17,7 @@ export default function ContactCompletePage() {
             <div className="mt-10">
                 <LinkButton
                     href="/contact/list"
-                    className="w-full rounded-lg bg-gray-200 px-8 py-4 font-bold text-gray-700 hover:bg-gray-300 sm:w-auto"
+                    className="rounded bg-gray-300 px-4 py-2"
                 >
                     お問合せ一覧へ
                 </LinkButton>

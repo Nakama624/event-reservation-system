@@ -83,7 +83,7 @@ export default async function EventDetailPage({ params }: Props) {
                             width={400}
                             height={240}
                             alt="イベントイメージ"
-                            className="h-[1000px] w-full rounded-xl object-cover"
+                            className="h-[600px] w-full rounded-xl object-contain"
                         />
                     </div>
 
