@@ -59,6 +59,37 @@ cp .env.example .env
 ./vendor/bin/sail artisan storage:link
 ```
 
+### MailPit
+
+MailPit：http://localhost:8025/
+
+> `laravel-next-app/.env` でMAIL_FROM_ADDRESSが設定されているか確認。
+>
+> ```diff
+> -　MAIL_FROM_ADDRESS=null
+> +　MAIL_FROM_ADDRESS=(例)no-reply@example.com
+> ```
+
+### stripe決済
+
+公式テスト詳細：https://docs.stripe.com/testing
+
+> stripe決済のアカウントを作成し、`laravel-next-app/.env` に以下のように追加。
+
+>
+> ```diff
+> +　STRIPE_SECRET=（stripe決済各ユーザーアカウントのシークレットキー）
+> ```
+
+#### 実行/クレジットカード（VISA/成功）
+
+- メールアドレス：任意のアドレス
+- カード番号(VISA)：4242424242424242
+- MM/YY：（任意の将来の日付）
+- セキュリティコード：（任意の 3 桁の数字）
+- 名前：任意の名前
+
+
 ### フロントエンド(next-frontend-app)
 
 ```bash
@@ -78,35 +109,6 @@ cp .env.example .env.local
 npm run dev
 ```
 
-### MailPit
-
-MailPit：http://localhost:8025/
-
-> `.env` ファイルでMAIL_FROM_ADDRESSが設定されているか確認。
->
-> ```diff
-> -　MAIL_FROM_ADDRESS=null
-> +　MAIL_FROM_ADDRESS=(例)no-reply@example.com
-> ```
-
-### stripe決済
-
-公式テスト詳細：https://docs.stripe.com/testing
-
-> stripe決済のアカウントを作成し、`.env` ファイルに以下のように追加。
-> https://dashboard.stripe.com/login?locale=ja-JP
->
-> ```diff
-> +　STRIPE_SECRET=（stripe決済各ユーザーアカウントのシークレットキー）
-> ```
-
-#### 実行テスト/クレジットカード（VISA/成功）
-
-- メールアドレス：任意のアドレス
-- カード番号(VISA)：4242424242424242
-- MM/YY：（任意の将来の日付）
-- セキュリティコード：（任意の 3 桁の数字）
-- 名前：任意の名前
 
 ## URL
 
