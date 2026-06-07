@@ -150,7 +150,10 @@ export default function ContactPage() {
 
                         {/* ボタン */}
                         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                            <FormButton className="w-full bg-blue-600 font-bold text-white sm:w-auto">
+                            <FormButton
+                                type="submit"
+                                className="w-full bg-blue-600 font-bold text-white sm:w-auto"
+                            >
                                 確認画面へ
                             </FormButton>
                         </div>

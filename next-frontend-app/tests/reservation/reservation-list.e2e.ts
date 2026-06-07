@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 
 // ＝＝＝一般ユーザーのみ＝＝＝
 test.describe("イベント一覧", () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
+        await context.clearCookies();
         // 各テストの前にログインページにアクセスする
         await page.goto("http://localhost:3000/login");
 

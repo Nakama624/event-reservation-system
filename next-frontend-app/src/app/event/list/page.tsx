@@ -1,11 +1,6 @@
 import LinkButton from "@/components/LinkButton";
 import EventSearchForm from "@/components/EventSearchForm";
 import Link from "next/link";
-// import Image from "next/image";
-
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-// import { redirect } from "next/navigation";
 
 interface EventItem {
     id: number;
@@ -23,9 +18,6 @@ interface EventItem {
     is_past_event: boolean;
 }
 
-interface EventListResponse {
-    events: EventItem[];
-}
 interface PaginationResponse<T> {
     data: T[];
     current_page: number;

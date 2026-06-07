@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 
 // ＝＝＝一般ユーザーのみ＝＝＝
 test.describe("イベント詳細/予約", () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
+        await context.clearCookies();
         await page.goto("http://localhost:3000/event/list");
 
         await expect(page.locator("tbody tr").first()).toBeVisible();
