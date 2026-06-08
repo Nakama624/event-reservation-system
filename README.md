@@ -30,6 +30,9 @@ docker run --rm \
   laravelsail/php84-composer:latest \
   composer install
 
+# Sail起動
+./vendor/bin/sail up -d
+
 # 環境変数ファイルを作成
 cp .env.example .env
 
@@ -38,9 +41,6 @@ cp .env.example .env
 
 # アプリケーションキーを生成
 ./vendor/bin/sail artisan key:generate
-
-# Sail起動
-./vendor/bin/sail up -d
 
 # マイグレーションを実行
 ./vendor/bin/sail artisan migrate
