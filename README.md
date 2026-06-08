@@ -243,10 +243,6 @@ next-frontend-app/src/tests/components/
 # フロントエンドディレクトリへ移動
 cd next-frontend-app
 
-```bash
-# フロントエンドディレクトリへ移動
-cd next-frontend-app
-
 # E2Eテストを一括実行
 npm run test:e2e
 ```
