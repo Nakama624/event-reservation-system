@@ -12,7 +12,7 @@
 
 ## 環境構築
 
-### Dockerビルド
+### Dockerビルド/バックエンド(laravel-next-app)
 
 ```bash
 # リポジトリをクローン
@@ -30,16 +30,6 @@ docker run --rm \
   laravelsail/php84-composer:latest \
   composer install
 
-# Sail を起動
-./vendor/bin/sail up -d
-```
-
-### バックエンド(laravel-next-app)
-
-```bash
-# Composer パッケージをインストール
-./vendor/bin/sail composer install
-
 # 環境変数ファイルを作成
 cp .env.example .env
 
@@ -48,6 +38,9 @@ cp .env.example .env
 
 # アプリケーションキーを生成
 ./vendor/bin/sail artisan key:generate
+
+# Sail起動
+./vendor/bin/sail up -d
 
 # マイグレーションを実行
 ./vendor/bin/sail artisan migrate
